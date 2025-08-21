@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 public class Yoyo {
 
@@ -10,8 +11,22 @@ public class Yoyo {
 |___|  \\__,_|_| |_| |_|   |_|\\___/ \\__, |\\___/ 
                                    |___/       
                 """;
+
         System.out.println("Hello from\n" + logo);
         System.out.println("WHAT IS UP, my g");
-        System.out.println("Bye. Hope to see you again soon.");
+
+        Scanner sc = new Scanner(System.in);
+        String input;
+
+        while (true) {
+            input = sc.nextLine();
+            if (input.equalsIgnoreCase("bye")) {
+                System.out.println("Bye. Hope to see you again soon.");
+                break; // exit when user types bye
+            }
+            System.out.println(input); // echo back the input
+        }
+
+        sc.close();
     }
 }
