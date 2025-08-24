@@ -2,28 +2,130 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Yoyo {
-
-    /* ===== Single lightweight exception kept inside Yoyo ===== */
-    private static class YoyoException extends Exception {
-        public YoyoException(String msg) { super(msg); }
+enum Command {
+    LIST, TODO, DEADLINE, EVENT, MARK, UNMARK, DELETE, BYE, HELP;
+    static Command parse(String raw) {
+        return switch (raw.toLowerCase()) {
+            case "list" -> LIST;
+            case "todo" -> TODO;
+            case "deadline" -> DEADLINE;
+            case "event" -> EVENT;
+            case "mark" -> MARK;
+            case "unmark" -> UNMARK;
+            case "delete" -> DELETE;
+            case "bye", "exit", "quit" -> BYE;
+            case "help" -> HELP;
+            default -> throw new IllegalArgumentException("Unknown command: " + raw);
+        };
     }
+}
 
+public class Yoyo {
     private static final String LINE = "____________________________________________________________";
 
-    private static void boxed(String... lines) {
-        System.out.println(LINE);
-        for (String s : lines) {
-            System.out.println(" " + s);
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        List<Task> tasks = new ArrayList<>();
+
+        greet();
+
+        while (true) {
+            if (!sc.hasNextLine()) break;
+            String input = sc.nextLine().trim();
+            if (input.isEmpty()) continue;
+
+            try {
+                String[] parts = input.split("\\s+", 2);
+                String cmdRaw = parts[0];
+                String rest = parts.length > 1 ? parts[1] : "";
+                Command cmd = Command.parse(cmdRaw);
+
+                switch (cmd) {
+                    case LIST -> showList(tasks);
+                    case HELP -> showHelp();
+                    case TODO -> {
+                        if (rest.isEmpty()) throw new YoyoException("A todo needs a description.\nHint: todo <description>");
+                        Task t = new Todo(rest);
+                        tasks.add(t);
+                        boxedAdded(t, tasks.size());
+                    }
+                    case DEADLINE -> {
+                        if (!rest.contains("/by"))
+                            throw new YoyoException("Usage: deadline <description> /by <deadline text>");
+                        String[] seg = rest.split("/by", 2);
+                        String desc = seg[0].trim();
+                        String by = seg[1].trim();
+                        if (desc.isEmpty() || by.isEmpty())
+                            throw new YoyoException("Usage: deadline <description> /by <deadline text>");
+                        Task t = new Deadline(desc, by);
+                        tasks.add(t);
+                        boxedAdded(t, tasks.size());
+                    }
+                    case EVENT -> {
+                        if (!rest.contains("/from") || !rest.contains("/to"))
+                            throw new YoyoException("Usage: event <description> /from <start> /to <end>");
+                        String[] first = rest.split("/from", 2);
+                        String desc = first[0].trim();
+                        String[] second = first[1].split("/to", 2);
+                        String from = second[0].trim();
+                        String to = second[1].trim();
+                        if (desc.isEmpty() || from.isEmpty() || to.isEmpty())
+                            throw new YoyoException("Usage: event <description> /from <start> /to <end>");
+                        Task t = new Event(desc, from, to);
+                        tasks.add(t);
+                        boxedAdded(t, tasks.size());
+                    }
+                    case MARK -> {
+                        int idx = parseIndex(rest, tasks.size());
+                        Task t = tasks.get(idx - 1);
+                        t.markDone();
+                        boxed("Nice! I've marked this task as done:", "  " + t.toString());
+                    }
+                    case UNMARK -> {
+                        int idx = parseIndex(rest, tasks.size());
+                        Task t = tasks.get(idx - 1);
+                        t.markUndone();
+                        boxed("OK, I've marked this task as not done yet:", "  " + t.toString());
+                    }
+                    case DELETE -> {
+                        int idx = parseIndex(rest, tasks.size());
+                        Task removed = tasks.remove(idx - 1);
+                        boxed(
+                            "Noted. I've removed this task:",
+                            "  " + removed.toString(),
+                            "Now you have " + tasks.size() + " tasks in the list."
+                        );
+                    }
+                    case BYE -> {
+                        boxed("Bye. Hope to see you again soon!");
+                        return;
+                    }
+                }
+            } catch (YoyoException e) {
+                boxed(e.getMessage());
+            } catch (IllegalArgumentException e) {
+                boxed("OOPS!!! I'm sorry, but I don't know what that means :-(",
+                      "Type 'help' to see commands.");
+            } catch (Exception e) {
+                boxed("Unexpected error: " + e.getMessage());
+            }
         }
-        System.out.println(LINE);
     }
 
-    private static void boxedAdded(Task t, int count) {
+    // Helpers
+    private static void greet() {
+        boxed("Hello! I'm Yoyo", "What can I do for you?");
+    }
+
+    private static void showHelp() {
         boxed(
-            "Got it. I've added this task:",
-            "  " + t.toString(),
-            "Now you have " + count + " tasks in the list."
+            "Commands:",
+            "  list",
+            "  todo <description>",
+            "  deadline <description> /by <deadline text>",
+            "  event <description> /from <start> /to <end>",
+            "  mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>",
+            "  bye"
         );
     }
 
@@ -39,13 +141,13 @@ public class Yoyo {
               .append(tasks.get(i).toString())
               .append("\n");
         }
-        // split so boxed prints each line separately (keeps formatting like the examples)
-        boxed(sb.toString().trim().split("\n"));
+        String content = sb.toString().trim();
+        boxed(content.split("\\R"));
     }
 
-    // ===== Helpers that throw YoyoException to centralise error handling =====
     private static int parseIndex(String arg, int size) throws YoyoException {
-        if (arg == null || arg.isEmpty()) throw new YoyoException("Usage: mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>.");
+        if (arg == null || arg.isEmpty())
+            throw new YoyoException("Usage: mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>.");
         int idx;
         try {
             idx = Integer.parseInt(arg.trim());
@@ -56,127 +158,23 @@ public class Yoyo {
         return idx;
     }
 
-    private static String[] splitOnce(String src, String token, String usageIfMissing) throws YoyoException {
-        String[] parts = src.split(token, 2);
-        if (parts.length < 2) throw new YoyoException(usageIfMissing);
-        String left = parts[0].trim(), right = parts[1].trim();
-        if (left.isEmpty() || right.isEmpty()) throw new YoyoException(usageIfMissing);
-        return new String[]{left, right};
+    private static void boxedAdded(Task t, int size) {
+        boxed(
+            "Got it. I've added this task:",
+            "  " + t.toString(),
+            "Now you have " + size + " tasks in the list."
+        );
     }
 
-    public static void main(String[] args) {
-        String logo = """
- ___                    __   __                
-|_ _|   __ _ _ __ ___   \\ \\/ /__  _   _  ___  
- | |   / _` | '_ ` _ \\   \\ V / _ \\| | | |/ _ \\ 
- | |  | (_| | | | | | |   | | (_) | |_| | (_) |
-|___|  \\__,_|_| |_| |_|   |_|\\___/ \\__, |\\___/ 
-                                   |___/       
-                """;
-
-        System.out.println("Hello from\n" + logo);
-        System.out.println("WHAT IS UP, my g");
-
-        Scanner sc = new Scanner(System.in);
-
-        // ==== Use Java Collections (A-Collections) ====
-        List<Task> tasks = new ArrayList<>();
-
-        while (true) {
-            String input = sc.nextLine().trim();
-            if (input.isEmpty()) {
-                continue;
-            }
-
-            try {
-                String[] parts = input.split("\\s+", 2);
-                String cmd = parts[0].toLowerCase();
-                String argsRest = (parts.length > 1) ? parts[1].trim() : "";
-
-                switch (cmd) {
-                    case "bye" -> {
-                        boxed("Bye. Hope to see you again soon!");
-                        sc.close();
-                        return;
-                    }
-
-                    case "list" ->  {
-                        showList(tasks);
-                    }
-
-                    case "mark" ->  {
-                        int idx = parseIndex(argsRest, tasks.size());
-                        tasks.get(idx - 1).markAsDone();
-                        boxed(
-                            "Nice! I've marked this task as done:",
-                            "  " + tasks.get(idx - 1).toString()
-                        );
-                    }
-
-                    case "unmark" ->  {
-                        int idx = parseIndex(argsRest, tasks.size());
-                        tasks.get(idx - 1).markAsUndone();
-                        boxed(
-                            "OK, I've marked this task as not done yet:",
-                            "  " + tasks.get(idx - 1).toString()
-                        );
-                    }
-
-                    case "delete" -> {
-                        int idx = parseIndex(argsRest, tasks.size());
-                        Task removed = tasks.remove(idx - 1);
-                        boxed(
-                            "Noted. I've removed this task:",
-                            "  " + removed.toString(),
-                            "Now you have " + tasks.size() + " tasks in the list."
-                        );
-                    }
-
-                    case "todo" ->  {
-                        if (argsRest.isEmpty()) {
-                            throw new YoyoException("A todo needs a description.\nHint: todo <description>");
-                        }
-                        Task t = new Todo(argsRest);
-                        tasks.add(t);
-                        boxedAdded(t, tasks.size());
-                    }
-
-                    case "deadline" ->  {
-                        if (argsRest.isEmpty()) {
-                            throw new YoyoException("Usage: deadline <description> /by <when>");
-                        }
-                        String[] ab = splitOnce(argsRest, "/by", "Usage: deadline <description> /by <when>");
-                        Task t = new Deadline(ab[0], ab[1]);
-                        tasks.add(t);
-                        boxedAdded(t, tasks.size());
-                    }
-
-                    case "event" ->  {
-                        if (argsRest.isEmpty()) {
-                            throw new YoyoException("Usage: event <description> /from <start> /to <end>");
-                        }
-                        String[] p1 = splitOnce(argsRest, "/from", "Usage: event <description> /from <start> /to <end>");
-                        String[] p2 = splitOnce(p1[1], "/to",   "Usage: event <description> /from <start> /to <end>");
-                        Task t = new Event(p1[0], p2[0], p2[1]);
-                        tasks.add(t);
-                        boxedAdded(t, tasks.size());
-                    }
-
-                    default -> {
-                        // Reject anything else (e.g., "123", "blah") as invalid
-                        throw new YoyoException(
-                            "Invalid command: '" + cmd + "'. Try one of:\n" +
-                            "  todo <description>\n" +
-                            "  deadline <description> /by <when>\n" +
-                            "  event <description> /from <start> /to <end>\n" +
-                            "  list | mark <n> | unmark <n> | delete <n> | bye"
-                        );
-                    }
-                }
-
-            } catch (YoyoException e) {
-                boxed("Oops! " + e.getMessage());
-            }
+    private static void boxed(String... lines) {
+        System.out.println(LINE);
+        for (String line : lines) {
+            System.out.println(" " + line);
         }
+        System.out.println(LINE);
     }
+}
+
+class YoyoException extends Exception {
+    public YoyoException(String msg) { super(msg); }
 }

@@ -1,10 +1,10 @@
-class Todo extends Task {
+public class Todo extends Task {
     public Todo(String description) {
-        super(description);
+        super(TaskType.TODO, description);
     }
 
     @Override
     public String toString() {
-        return "[T]" + super.toString();
+        return baseString();
     }
 }
