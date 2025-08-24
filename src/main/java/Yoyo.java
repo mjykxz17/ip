@@ -1,8 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Yoyo {
 
-    /* ===== Single lightweight exception kept inside Yoyo (only one class changed) ===== */
+    /* ===== Single lightweight exception kept inside Yoyo ===== */
     private static class YoyoException extends Exception {
         public YoyoException(String msg) { super(msg); }
     }
@@ -25,28 +27,25 @@ public class Yoyo {
         );
     }
 
-    private static void showList(Task[] tasks, int size) {
-        if (size == 0) {
+    private static void showList(List<Task> tasks) {
+        if (tasks.isEmpty()) {
             boxed("(no tasks yet)");
             return;
         }
         StringBuilder sb = new StringBuilder();
         sb.append("Here are the tasks in your list:\n");
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < tasks.size(); i++) {
             sb.append(" ").append(i + 1).append(".")
-              .append(tasks[i].toString())
+              .append(tasks.get(i).toString())
               .append("\n");
         }
+        // split so boxed prints each line separately (keeps formatting like the examples)
         boxed(sb.toString().trim().split("\n"));
     }
 
     // ===== Helpers that throw YoyoException to centralise error handling =====
-    private static void requireCapacity(int size) throws YoyoException {
-        if (size >= 100) throw new YoyoException("Task list is full (100 items).");
-    }
-
     private static int parseIndex(String arg, int size) throws YoyoException {
-        if (arg == null || arg.isEmpty()) throw new YoyoException("Usage: mark <taskNumber> or unmark <taskNumber>.");
+        if (arg == null || arg.isEmpty()) throw new YoyoException("Usage: mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>.");
         int idx;
         try {
             idx = Integer.parseInt(arg.trim());
@@ -68,7 +67,7 @@ public class Yoyo {
     public static void main(String[] args) {
         String logo = """
  ___                    __   __                
-|_ _|   __ _ _ __ ___   \\ \\ / /__  _   _  ___  
+|_ _|   __ _ _ __ ___   \\ \\/ /__  _   _  ___  
  | |   / _` | '_ ` _ \\   \\ V / _ \\| | | |/ _ \\ 
  | |  | (_| | | | | | |   | | (_) | |_| | (_) |
 |___|  \\__,_|_| |_| |_|   |_|\\___/ \\__, |\\___/ 
@@ -80,9 +79,8 @@ public class Yoyo {
 
         Scanner sc = new Scanner(System.in);
 
-        // Storage for up to 100 Task objects (polymorphism)
-        Task[] tasks = new Task[100];
-        int size = 0;
+        // ==== Use Java Collections (A-Collections) ====
+        List<Task> tasks = new ArrayList<>();
 
         while (true) {
             String input = sc.nextLine().trim();
@@ -103,24 +101,34 @@ public class Yoyo {
                     }
 
                     case "list" ->  {
-                        showList(tasks, size);
+                        showList(tasks);
                     }
 
                     case "mark" ->  {
-                        int idx = parseIndex(argsRest, size);
-                        tasks[idx - 1].markAsDone();
+                        int idx = parseIndex(argsRest, tasks.size());
+                        tasks.get(idx - 1).markAsDone();
                         boxed(
                             "Nice! I've marked this task as done:",
-                            "  " + tasks[idx - 1].toString()
+                            "  " + tasks.get(idx - 1).toString()
                         );
                     }
 
                     case "unmark" ->  {
-                        int idx = parseIndex(argsRest, size);
-                        tasks[idx - 1].markAsUndone();
+                        int idx = parseIndex(argsRest, tasks.size());
+                        tasks.get(idx - 1).markAsUndone();
                         boxed(
                             "OK, I've marked this task as not done yet:",
-                            "  " + tasks[idx - 1].toString()
+                            "  " + tasks.get(idx - 1).toString()
+                        );
+                    }
+
+                    case "delete" -> {
+                        int idx = parseIndex(argsRest, tasks.size());
+                        Task removed = tasks.remove(idx - 1);
+                        boxed(
+                            "Noted. I've removed this task:",
+                            "  " + removed.toString(),
+                            "Now you have " + tasks.size() + " tasks in the list."
                         );
                     }
 
@@ -128,10 +136,9 @@ public class Yoyo {
                         if (argsRest.isEmpty()) {
                             throw new YoyoException("A todo needs a description.\nHint: todo <description>");
                         }
-                        requireCapacity(size);
                         Task t = new Todo(argsRest);
-                        tasks[size++] = t;
-                        boxedAdded(t, size);
+                        tasks.add(t);
+                        boxedAdded(t, tasks.size());
                     }
 
                     case "deadline" ->  {
@@ -139,10 +146,9 @@ public class Yoyo {
                             throw new YoyoException("Usage: deadline <description> /by <when>");
                         }
                         String[] ab = splitOnce(argsRest, "/by", "Usage: deadline <description> /by <when>");
-                        requireCapacity(size);
                         Task t = new Deadline(ab[0], ab[1]);
-                        tasks[size++] = t;
-                        boxedAdded(t, size);
+                        tasks.add(t);
+                        boxedAdded(t, tasks.size());
                     }
 
                     case "event" ->  {
@@ -151,10 +157,9 @@ public class Yoyo {
                         }
                         String[] p1 = splitOnce(argsRest, "/from", "Usage: event <description> /from <start> /to <end>");
                         String[] p2 = splitOnce(p1[1], "/to",   "Usage: event <description> /from <start> /to <end>");
-                        requireCapacity(size);
                         Task t = new Event(p1[0], p2[0], p2[1]);
-                        tasks[size++] = t;
-                        boxedAdded(t, size);
+                        tasks.add(t);
+                        boxedAdded(t, tasks.size());
                     }
 
                     default -> {
@@ -164,7 +169,7 @@ public class Yoyo {
                             "  todo <description>\n" +
                             "  deadline <description> /by <when>\n" +
                             "  event <description> /from <start> /to <end>\n" +
-                            "  list | mark <n> | unmark <n> | bye"
+                            "  list | mark <n> | unmark <n> | delete <n> | bye"
                         );
                     }
                 }
@@ -175,4 +180,3 @@ public class Yoyo {
         }
     }
 }
- 
