@@ -1,7 +1,11 @@
-
 import java.util.Scanner;
 
 public class Yoyo {
+
+    /* ===== Single lightweight exception kept inside Yoyo (only one class changed) ===== */
+    private static class YoyoException extends Exception {
+        public YoyoException(String msg) { super(msg); }
+    }
 
     private static final String LINE = "____________________________________________________________";
 
@@ -15,9 +19,9 @@ public class Yoyo {
 
     private static void boxedAdded(Task t, int count) {
         boxed(
-                "Got it. I've added this task:",
-                "  " + t.toString(),
-                "Now you have " + count + " tasks in the list."
+            "Got it. I've added this task:",
+            "  " + t.toString(),
+            "Now you have " + count + " tasks in the list."
         );
     }
 
@@ -30,10 +34,35 @@ public class Yoyo {
         sb.append("Here are the tasks in your list:\n");
         for (int i = 0; i < size; i++) {
             sb.append(" ").append(i + 1).append(".")
-                    .append(tasks[i].toString())
-                    .append("\n");
+              .append(tasks[i].toString())
+              .append("\n");
         }
         boxed(sb.toString().trim().split("\n"));
+    }
+
+    // ===== Helpers that throw YoyoException to centralise error handling =====
+    private static void requireCapacity(int size) throws YoyoException {
+        if (size >= 100) throw new YoyoException("Task list is full (100 items).");
+    }
+
+    private static int parseIndex(String arg, int size) throws YoyoException {
+        if (arg == null || arg.isEmpty()) throw new YoyoException("Usage: mark <taskNumber> or unmark <taskNumber>.");
+        int idx;
+        try {
+            idx = Integer.parseInt(arg.trim());
+        } catch (NumberFormatException e) {
+            throw new YoyoException("Task number must be an integer.");
+        }
+        if (idx < 1 || idx > size) throw new YoyoException("Invalid task number: " + idx);
+        return idx;
+    }
+
+    private static String[] splitOnce(String src, String token, String usageIfMissing) throws YoyoException {
+        String[] parts = src.split(token, 2);
+        if (parts.length < 2) throw new YoyoException(usageIfMissing);
+        String left = parts[0].trim(), right = parts[1].trim();
+        if (left.isEmpty() || right.isEmpty()) throw new YoyoException(usageIfMissing);
+        return new String[]{left, right};
     }
 
     public static void main(String[] args) {
@@ -61,151 +90,89 @@ public class Yoyo {
                 continue;
             }
 
-            String[] parts = input.split("\\s+", 2);
-            String cmd = parts[0].toLowerCase();
-            String argsRest = (parts.length > 1) ? parts[1].trim() : "";
+            try {
+                String[] parts = input.split("\\s+", 2);
+                String cmd = parts[0].toLowerCase();
+                String argsRest = (parts.length > 1) ? parts[1].trim() : "";
 
-            switch (cmd) {
-                case "bye": {
-                    boxed("Bye. Hope to see you again soon!");
-                    sc.close();
-                    return;
-                }
-
-                case "list": {
-                    showList(tasks, size);
-                    break;
-                }
-
-                case "mark": {
-                    if (argsRest.isEmpty()) {
-                        boxed("Usage: mark <taskNumber>");
-                        break;
+                switch (cmd) {
+                    case "bye" -> {
+                        boxed("Bye. Hope to see you again soon!");
+                        sc.close();
+                        return;
                     }
-                    try {
-                        int idx = Integer.parseInt(argsRest);
-                        if (idx < 1 || idx > size) {
-                            boxed("Invalid task number: " + idx);
-                            break;
-                        }
+
+                    case "list" ->  {
+                        showList(tasks, size);
+                    }
+
+                    case "mark" ->  {
+                        int idx = parseIndex(argsRest, size);
                         tasks[idx - 1].markAsDone();
                         boxed(
-                                "Nice! I've marked this task as done:",
-                                "  " + tasks[idx - 1].toString()
+                            "Nice! I've marked this task as done:",
+                            "  " + tasks[idx - 1].toString()
                         );
-                    } catch (NumberFormatException e) {
-                        boxed("Task number must be an integer.");
                     }
-                    break;
-                }
 
-                case "unmark": {
-                    if (argsRest.isEmpty()) {
-                        boxed("Usage: unmark <taskNumber>");
-                        break;
-                    }
-                    try {
-                        int idx = Integer.parseInt(argsRest);
-                        if (idx < 1 || idx > size) {
-                            boxed("Invalid task number: " + idx);
-                            break;
-                        }
+                    case "unmark" ->  {
+                        int idx = parseIndex(argsRest, size);
                         tasks[idx - 1].markAsUndone();
                         boxed(
-                                "OK, I've marked this task as not done yet:",
-                                "  " + tasks[idx - 1].toString()
+                            "OK, I've marked this task as not done yet:",
+                            "  " + tasks[idx - 1].toString()
                         );
-                    } catch (NumberFormatException e) {
-                        boxed("Task number must be an integer.");
                     }
-                    break;
+
+                    case "todo" ->  {
+                        if (argsRest.isEmpty()) {
+                            throw new YoyoException("A todo needs a description.\nHint: todo <description>");
+                        }
+                        requireCapacity(size);
+                        Task t = new Todo(argsRest);
+                        tasks[size++] = t;
+                        boxedAdded(t, size);
+                    }
+
+                    case "deadline" ->  {
+                        if (argsRest.isEmpty()) {
+                            throw new YoyoException("Usage: deadline <description> /by <when>");
+                        }
+                        String[] ab = splitOnce(argsRest, "/by", "Usage: deadline <description> /by <when>");
+                        requireCapacity(size);
+                        Task t = new Deadline(ab[0], ab[1]);
+                        tasks[size++] = t;
+                        boxedAdded(t, size);
+                    }
+
+                    case "event" ->  {
+                        if (argsRest.isEmpty()) {
+                            throw new YoyoException("Usage: event <description> /from <start> /to <end>");
+                        }
+                        String[] p1 = splitOnce(argsRest, "/from", "Usage: event <description> /from <start> /to <end>");
+                        String[] p2 = splitOnce(p1[1], "/to",   "Usage: event <description> /from <start> /to <end>");
+                        requireCapacity(size);
+                        Task t = new Event(p1[0], p2[0], p2[1]);
+                        tasks[size++] = t;
+                        boxedAdded(t, size);
+                    }
+
+                    default -> {
+                        // Reject anything else (e.g., "123", "blah") as invalid
+                        throw new YoyoException(
+                            "Invalid command: '" + cmd + "'. Try one of:\n" +
+                            "  todo <description>\n" +
+                            "  deadline <description> /by <when>\n" +
+                            "  event <description> /from <start> /to <end>\n" +
+                            "  list | mark <n> | unmark <n> | bye"
+                        );
+                    }
                 }
 
-                case "todo": {
-                    if (argsRest.isEmpty()) {
-                        boxed("Usage: todo <description>");
-                        break;
-                    }
-                    if (size >= 100) {
-                        boxed("Task list is full (100 items).");
-                        break;
-                    }
-                    Task t = new Todo(argsRest);
-                    tasks[size++] = t;
-                    boxedAdded(t, size);
-                    break;
-                }
-
-                case "deadline": {
-                    if (argsRest.isEmpty()) {
-                        boxed("Usage: deadline <description> /by <when>");
-                        break;
-                    }
-                    String[] split = argsRest.split("/by", 2);
-                    if (split.length < 2) {
-                        boxed("Missing '/by'. Usage: deadline <description> /by <when>");
-                        break;
-                    }
-                    String desc = split[0].trim();
-                    String by = split[1].trim();
-                    if (desc.isEmpty() || by.isEmpty()) {
-                        boxed("Both description and '/by' time are required.");
-                        break;
-                    }
-                    if (size >= 100) {
-                        boxed("Task list is full (100 items).");
-                        break;
-                    }
-                    Task t = new Deadline(desc, by);
-                    tasks[size++] = t;
-                    boxedAdded(t, size);
-                    break;
-                }
-
-                case "event": {
-                    if (argsRest.isEmpty()) {
-                        boxed("Usage: event <description> /from <start> /to <end>");
-                        break;
-                    }
-                    String[] p1 = argsRest.split("/from", 2);
-                    if (p1.length < 2) {
-                        boxed("Missing '/from'. Usage: event <description> /from <start> /to <end>");
-                        break;
-                    }
-                    String desc = p1[0].trim();
-                    String[] p2 = p1[1].split("/to", 2);
-                    if (p2.length < 2) {
-                        boxed("Missing '/to'. Usage: event <description> /from <start> /to <end>");
-                        break;
-                    }
-                    String from = p2[0].trim();
-                    String to = p2[1].trim();
-                    if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        boxed("Description, '/from', and '/to' must not be empty.");
-                        break;
-                    }
-                    if (size >= 100) {
-                        boxed("Task list is full (100 items).");
-                        break;
-                    }
-                    Task t = new Event(desc, from, to);
-                    tasks[size++] = t;
-                    boxedAdded(t, size);
-                    break;
-                }
-
-                default: {
-                    // Fallback: treat as a quick todo for convenience
-                    if (size >= 100) {
-                        boxed("Task list is full (100 items).");
-                        break;
-                    }
-                    Task t = new Todo(input);
-                    tasks[size++] = t;
-                    boxedAdded(t, size);
-                    break;
-                }
+            } catch (YoyoException e) {
+                boxed("Oops! " + e.getMessage());
             }
         }
     }
 }
+ 
