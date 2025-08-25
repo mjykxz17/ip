@@ -1,3 +1,5 @@
+package yoyo;
+
 public class Ui {
     private final java.util.Scanner sc = new java.util.Scanner(System.in);
     private static final String LINE = "____________________________________________________________";

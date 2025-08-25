@@ -1,3 +1,5 @@
+package yoyo;
+
 enum Status {
     NOT_DONE(' '),
     DONE('X');

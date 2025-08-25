@@ -1,3 +1,5 @@
+package yoyo;
+
 public class Parser {
     public static class Parsed {
         public final String cmd;

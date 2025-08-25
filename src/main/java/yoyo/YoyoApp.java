@@ -1,3 +1,5 @@
+package yoyo;
+
 public class YoyoApp {
     private final Ui ui;
     private final Storage storage;

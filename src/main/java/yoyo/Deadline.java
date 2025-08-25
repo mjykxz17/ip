@@ -1,65 +1,58 @@
-// Event.java
+package yoyo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Event extends Task {
-    private final LocalDateTime from;
-    private final LocalDateTime to;
+public class Deadline extends Task {
+    private final LocalDateTime by;
 
-    // Pretty output (e.g., "Dec 2 2019, 14:00")
+    // Pretty output like: "Dec 2 2019, 18:00"
     private static final DateTimeFormatter OUTPUT_FORMAT =
             DateTimeFormatter.ofPattern("MMM d yyyy, HH:mm");
 
-    // Stable storage (e.g., "2019-12-02 1400")
+    // Stable storage like: "2019-12-02 1800"
     private static final DateTimeFormatter STORAGE_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
-    public Event(String description, String fromRaw, String toRaw) {
-        super(TaskType.EVENT, description);
-        this.from = parseFlexibleDateTime(fromRaw);
-        this.to = parseFlexibleDateTime(toRaw);
-        if (this.to.isBefore(this.from)) {
-            throw new IllegalArgumentException("Event end time must be after start time.");
-        }
+    public Deadline(String description, String byRaw) {
+        super(TaskType.DEADLINE, description);
+        this.by = parseFlexibleDateTime(byRaw);
     }
 
-    public LocalDateTime getFrom() { return from; }
-    public LocalDateTime getTo()   { return to;   }
+    public LocalDateTime getBy() {
+        return by;
+    }
 
     @Override
     public String toString() {
-        return baseString() + " (from: " + from.format(OUTPUT_FORMAT)
-                + " to: " + to.format(OUTPUT_FORMAT) + ")";
+        return baseString() + " (by: " + by.format(OUTPUT_FORMAT) + ")";
     }
 
     @Override
     public String serialize() {
-        // Pipe format: E | 0/1 | description | yyyy-MM-dd HHmm | yyyy-MM-dd HHmm
-        return String.format("%c | %d | %s | %s | %s",
+        return String.format("%c | %d | %s | %s",
                 type.code(),
-                isDone() ? 1 : 0,
+                isDone() ? 1 : 0,                  // <- changed from status.flag()
                 description,
-                from.format(STORAGE_FORMAT),
-                to.format(STORAGE_FORMAT));
+                by.format(STORAGE_FORMAT));
     }
 
-    // ---- parsing helpers (accept multiple formats) ----
+    // ---- Parsing helpers (accepts multiple formats) ----
     private static LocalDateTime parseFlexibleDateTime(String raw) {
         String s = raw.trim();
 
         // Try datetime patterns first
-        for (DateTimeFormatter f : new DateTimeFormatter[] {
+        for (DateTimeFormatter f : new DateTimeFormatter[]{
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"),
                 DateTimeFormatter.ofPattern("d/M/yyyy HHmm")
         }) {
             try { return LocalDateTime.parse(s, f); } catch (DateTimeParseException ignored) {}
         }
 
-        // Then date-only (assume 00:00)
-        for (DateTimeFormatter f : new DateTimeFormatter[] {
+        // Then try date-only (assume 00:00 time)
+        for (DateTimeFormatter f : new DateTimeFormatter[]{
                 DateTimeFormatter.ISO_LOCAL_DATE,               // yyyy-MM-dd
                 DateTimeFormatter.ofPattern("d/M/yyyy")         // 2/12/2019
         }) {
@@ -69,6 +62,7 @@ public class Event extends Task {
             } catch (DateTimeParseException ignored) {}
         }
 
+        // Fallback: let the exception explain the expected formats
         throw new IllegalArgumentException(
             "Unrecognized date/time: \"" + raw +
             "\". Use yyyy-MM-dd or d/M/yyyy, optionally with time HHmm.");
