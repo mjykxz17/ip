@@ -155,7 +155,20 @@ public class Yoyo {
     }
 
     private static void greet() {
-        boxed("Hello! I'm Yoyo", "What can I do for you?");
+        String banner = """
+                 ___                    __   __                
+                |_ _|   __ _ _ __ ___   \\ \\ / /__  _   _  ___  
+                 | |   / _` | '_ ` _ \\   \\ V / _ \\| | | |/ _ \\ 
+                 | |  | (_| | | | | | |   | | (_) | |_| | (_) |
+                |___|  \\__,_|_| |_| |_|   |_|\\___/ \\__, |\\___/ 
+                                                    |___/       
+                                """.stripTrailing();
+
+    java.util.List<String> lines = new java.util.ArrayList<>();
+        lines.add("Hello! I'm Yoyo");
+        lines.add("Type 'help' to see commands.");
+    java.util.Collections.addAll(lines, banner.split("\\R"));
+    boxed(lines.toArray(String[]::new));
     }
 
     private static void showHelp() {
