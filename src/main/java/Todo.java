@@ -1,4 +1,6 @@
+
 public class Todo extends Task {
+
     public Todo(String description) {
         super(TaskType.TODO, description);
     }
@@ -10,7 +12,6 @@ public class Todo extends Task {
 
     @Override
     public String serialize() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'serialize'");
+        return String.format("%c | %d | %s", type.code(), isDone() ? 1 : 0, description);
     }
 }
