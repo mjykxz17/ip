@@ -7,4 +7,10 @@ public class Todo extends Task {
     public String toString() {
         return baseString();
     }
+
+    @Override
+    public String serialize() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'serialize'");
+    }
 }

@@ -85,36 +85,30 @@ public class Yoyo {
 
                     case DEADLINE -> {
                         if (!rest.contains("/by")) {
-                            throw new YoyoException("Usage: deadline <description> /by <deadline text>");
+                            throw new YoyoException("Usage: deadline <description> /by <yyyy-MM-dd>");
                         }
                         String[] seg = rest.split("/by", 2);
                         String desc = seg[0].trim();
                         String by = seg[1].trim();
-                        if (desc.isEmpty() || by.isEmpty()) {
-                            throw new YoyoException("Usage: deadline <description> /by <deadline text>");
-                        }
                         Task t = new Deadline(desc, by);
                         tasks.add(t);
                         boxedAdded(t, tasks.size());
-                        storage.save(tasks); // NEW
+                        storage.save(tasks);
                     }
 
                     case EVENT -> {
                         if (!rest.contains("/from") || !rest.contains("/to")) {
-                            throw new YoyoException("Usage: event <description> /from <start> /to <end>");
+                            throw new YoyoException("Usage: event <description> /from <yyyy-MM-dd HHmm> /to <yyyy-MM-dd HHmm>");
                         }
                         String[] first = rest.split("/from", 2);
                         String desc = first[0].trim();
                         String[] second = first[1].split("/to", 2);
                         String from = second[0].trim();
                         String to = second[1].trim();
-                        if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                            throw new YoyoException("Usage: event <description> /from <start> /to <end>");
-                        }
                         Task t = new Event(desc, from, to);
                         tasks.add(t);
                         boxedAdded(t, tasks.size());
-                        storage.save(tasks); // NEW
+                        storage.save(tasks);
                     }
 
                     case MARK -> {

@@ -38,6 +38,9 @@ public abstract class Task {
         return "[" + type.code() + "][" + status.symbol() + "] " + description;
     }
 
+    /** Declare this so subclasses (Todo/Deadline/Event) can @Override it. */
+    public abstract String serialize();
+
     @Override
     public abstract String toString();
 }
