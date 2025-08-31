@@ -1,10 +1,16 @@
 package yoyo;
 
 public class Parser {
+
     public static class Parsed {
+
         public final String cmd;
         public final String args;
-        public Parsed(String cmd, String args) { this.cmd = cmd; this.args = args; }
+
+        public Parsed(String cmd, String args) {
+            this.cmd = cmd;
+            this.args = args;
+        }
     }
 
     public static Parsed parse(String input) {
@@ -14,7 +20,14 @@ public class Parser {
         return new Parsed(cmd, args);
     }
 
-    /** Matches original Yoyo index validation semantics. */
+    /**
+     * Parses a task index from a string, validating it against the list size.
+     *
+     * @param arg the index string
+     * @param size the size of the task list
+     * @return the parsed 1-based index
+     * @throws YoyoException if the index is invalid
+     */
     public static int parseIndex(String arg, int size) throws YoyoException {
         if (arg == null || arg.isEmpty()) {
             throw new YoyoException("Usage: mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>.");
