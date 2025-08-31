@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TaskList {
+
     private final List<Task> tasks;
 
     public TaskList() {
@@ -41,5 +42,21 @@ public class TaskList {
 
     public List<Task> asList() {
         return Collections.unmodifiableList(tasks);
+    }
+
+    /**
+     * Finds tasks that contain the given keyword in their description.
+     *
+     * @param keyword the keyword to search for
+     * @return the list of matching tasks
+     */
+    public List<Task> find(String keyword) {
+        List<Task> matching = new ArrayList<>();
+        for (Task t : tasks) {
+            if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                matching.add(t);
+            }
+        }
+        return matching;
     }
 }

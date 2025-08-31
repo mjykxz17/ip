@@ -1,6 +1,7 @@
 package yoyo;
 
 public class YoyoApp {
+
     private final Ui ui;
     private final Storage storage;
     private final TaskList tasks;
@@ -26,9 +27,11 @@ public class YoyoApp {
             try {
                 Parser.Parsed p = Parser.parse(input);
                 switch (p.cmd) {
-                    case "list" -> ui.showList(tasks.asList());
+                    case "list" ->
+                        ui.showList(tasks.asList());
 
-                    case "help" -> ui.showHelp();
+                    case "help" ->
+                        ui.showHelp();
 
                     case "todo" -> {
                         if (p.args.isEmpty()) {
@@ -87,6 +90,14 @@ public class YoyoApp {
                         Task removed = tasks.remove(idx);
                         ui.showRemoved(removed, tasks.size());
                         storage.save(tasks.asList());
+                    }
+
+                    case "find" -> {
+                        if (p.args.isEmpty()) {
+                            throw new YoyoException("Please provide a keyword to search.\nHint: find <keyword>");
+                        }
+                        java.util.List<Task> found = tasks.find(p.args);
+                        ui.showFound(found);
                     }
 
                     case "bye", "exit", "quit" -> {

@@ -1,6 +1,7 @@
 package yoyo;
 
 public class Ui {
+
     private final java.util.Scanner sc = new java.util.Scanner(System.in);
     private static final String LINE = "____________________________________________________________";
 
@@ -32,6 +33,7 @@ public class Ui {
                 "  deadline <description> /by <deadline text>",
                 "  event <description> /from <start> /to <end>",
                 "  mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>",
+                "  find <keyword>",
                 "  bye"
         );
     }
@@ -47,6 +49,24 @@ public class Ui {
         }
         StringBuilder sb = new StringBuilder();
         sb.append("Here are the tasks in your list:\n");
+        for (int i = 0; i < tasks.size(); i++) {
+            sb.append(" ").append(i + 1).append(".").append(tasks.get(i).toString()).append("\n");
+        }
+        boxed(sb.toString().trim().split("\\R"));
+    }
+
+    /**
+     * Displays the list of tasks that match the search keyword.
+     *
+     * @param tasks the list of matching tasks
+     */
+    public void showFound(java.util.List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            boxed("No matching tasks found.");
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Here are the matching tasks in your list:\n");
         for (int i = 0; i < tasks.size(); i++) {
             sb.append(" ").append(i + 1).append(".").append(tasks.get(i).toString()).append("\n");
         }
@@ -82,9 +102,13 @@ public class Ui {
     }
 
     public void showWarnings(java.util.List<String> warnings) {
-        if (warnings == null || warnings.isEmpty()) return;
+        if (warnings == null || warnings.isEmpty()) {
+            return;
+        }
         boxed("Note: some saved lines were skipped as corrupted:");
-        for (String w : warnings) boxed(" - " + w);
+        for (String w : warnings) {
+            boxed(" - " + w);
+        }
     }
 
     private void boxed(String... lines) {
