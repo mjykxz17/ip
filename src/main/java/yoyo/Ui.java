@@ -46,6 +46,7 @@ public class Ui {
                 "  deadline <description> /by <deadline text>",
                 "  event <description> /from <start> /to <end>",
                 "  mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>",
+                "  find <keyword>",
                 "  bye"
         );
     }
@@ -78,11 +79,31 @@ public class Ui {
     }
 
     /**
+<<<<<<< HEAD
      * Displays a message when a task is added.
      *
      * @param t the added task
      * @param size the new total number of tasks
      */
+=======
+     * Displays the list of tasks that match the search keyword.
+     *
+     * @param tasks the list of matching tasks
+     */
+    public void showFound(java.util.List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            boxed("No matching tasks found.");
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Here are the matching tasks in your list:\n");
+        for (int i = 0; i < tasks.size(); i++) {
+            sb.append(" ").append(i + 1).append(".").append(tasks.get(i).toString()).append("\n");
+        }
+        boxed(sb.toString().trim().split("\\R"));
+    }
+
+>>>>>>> branch-Level-9
     public void showAdded(Task t, int size) {
         boxed(
                 "Got it. I've added this task:",

@@ -105,6 +105,14 @@ public class YoyoApp {
                         storage.save(tasks.asList());
                     }
 
+                    case "find" -> {
+                        if (p.args.isEmpty()) {
+                            throw new YoyoException("Please provide a keyword to search.\nHint: find <keyword>");
+                        }
+                        java.util.List<Task> found = tasks.find(p.args);
+                        ui.showFound(found);
+                    }
+
                     case "bye", "exit", "quit" -> {
                         ui.showLine();
                         ui.showError("Bye. Hope to see you again soon!");

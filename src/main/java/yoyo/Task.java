@@ -20,6 +20,7 @@ enum Status {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     /**
      * Returns the symbol representing this status.
      *
@@ -27,10 +28,13 @@ enum Status {
      */
 =======
 >>>>>>> branch-A-CodingStandard
+=======
+>>>>>>> branch-Level-9
     public char symbol() {
         return symbol;
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     /**
      * Creates a Status from a boolean value.
@@ -40,10 +44,13 @@ enum Status {
      */
 =======
 >>>>>>> branch-A-CodingStandard
+=======
+>>>>>>> branch-Level-9
     public static Status fromBoolean(boolean done) {
         return done ? DONE : NOT_DONE;
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     /**
      * Returns the toggled status.
@@ -52,6 +59,8 @@ enum Status {
      */
 =======
 >>>>>>> branch-A-CodingStandard
+=======
+>>>>>>> branch-Level-9
     public Status toggled() {
         return this == DONE ? NOT_DONE : DONE;
     }
@@ -81,6 +90,7 @@ enum TaskType {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     /**
      * Returns the code representing this task type.
      *
@@ -88,6 +98,8 @@ enum TaskType {
      */
 =======
 >>>>>>> branch-A-CodingStandard
+=======
+>>>>>>> branch-Level-9
     public char code() {
         return code;
     }
@@ -116,6 +128,7 @@ public abstract class Task {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     /**
      * Marks the task as done.
      */
@@ -125,6 +138,27 @@ public abstract class Task {
 =======
     public void markDone() {
         this.status = Status.DONE;
+=======
+    public void markDone() {
+        this.status = Status.DONE;
+    }
+
+    public void markUndone() {
+        this.status = Status.NOT_DONE;
+    }
+
+    public boolean isDone() {
+        return this.status == Status.DONE;
+    }
+
+    /**
+     * Returns the description of the task.
+     *
+     * @return the task description
+     */
+    public String getDescription() {
+        return description;
+>>>>>>> branch-Level-9
     }
 
     public void markUndone() {
@@ -162,9 +196,13 @@ public abstract class Task {
     }
 
     /**
+<<<<<<< HEAD
      * Serializes the task for storage.
      *
      * @return the serialized string
+=======
+     * Declare this so subclasses (Todo/Deadline/Event) can @Override it.
+>>>>>>> branch-Level-9
      */
     public abstract String serialize();
 
