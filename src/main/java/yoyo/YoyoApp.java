@@ -1,10 +1,21 @@
 package yoyo;
 
+/**
+ * Main application class for the Yoyo task management system. Handles user
+ * interactions, task management, and data persistence.
+ */
 public class YoyoApp {
+
     private final Ui ui;
     private final Storage storage;
     private final TaskList tasks;
 
+    /**
+     * Constructs a new YoyoApp instance with the specified data file path.
+     * Initializes UI, storage, and loads existing tasks.
+     *
+     * @param filePath the path to the data file for storing tasks
+     */
     public YoyoApp(String filePath) {
         this.ui = new Ui();
         this.storage = new Storage(filePath);
@@ -15,6 +26,9 @@ public class YoyoApp {
         }
     }
 
+    /**
+     * Runs the main application loop, processing user commands until exit.
+     */
     public void run() {
         ui.showWelcome();
         boolean exit = false;
@@ -26,9 +40,11 @@ public class YoyoApp {
             try {
                 Parser.Parsed p = Parser.parse(input);
                 switch (p.cmd) {
-                    case "list" -> ui.showList(tasks.asList());
+                    case "list" ->
+                        ui.showList(tasks.asList());
 
-                    case "help" -> ui.showHelp();
+                    case "help" ->
+                        ui.showHelp();
 
                     case "todo" -> {
                         if (p.args.isEmpty()) {
@@ -112,6 +128,12 @@ public class YoyoApp {
         }
     }
 
+    /**
+     * Main entry point for the Yoyo application. Creates a new YoyoApp instance
+     * and starts the application.
+     *
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         new YoyoApp("data/yoyo.txt").run();
     }
