@@ -5,6 +5,7 @@ package yoyo;
  */
 public class Parser {
 
+<<<<<<< HEAD
     /**
      * Represents a parsed command with its type and arguments.
      */
@@ -13,18 +14,25 @@ public class Parser {
         /**
          * The command type.
          */
+=======
+    public static class Parsed {
+
+>>>>>>> branch-A-CodingStandard
         public final String cmd;
         /**
          * The arguments for the command.
          */
         public final String args;
 
+<<<<<<< HEAD
         /**
          * Constructs a Parsed command.
          *
          * @param cmd the command type
          * @param args the command arguments
          */
+=======
+>>>>>>> branch-A-CodingStandard
         public Parsed(String cmd, String args) {
             this.cmd = cmd;
             this.args = args;

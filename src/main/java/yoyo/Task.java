@@ -19,30 +19,39 @@ enum Status {
         this.symbol = symbol;
     }
 
+<<<<<<< HEAD
     /**
      * Returns the symbol representing this status.
      *
      * @return the status symbol
      */
+=======
+>>>>>>> branch-A-CodingStandard
     public char symbol() {
         return symbol;
     }
 
+<<<<<<< HEAD
     /**
      * Creates a Status from a boolean value.
      *
      * @param done true if done, false otherwise
      * @return the corresponding Status
      */
+=======
+>>>>>>> branch-A-CodingStandard
     public static Status fromBoolean(boolean done) {
         return done ? DONE : NOT_DONE;
     }
 
+<<<<<<< HEAD
     /**
      * Returns the toggled status.
      *
      * @return the opposite status
      */
+=======
+>>>>>>> branch-A-CodingStandard
     public Status toggled() {
         return this == DONE ? NOT_DONE : DONE;
     }
@@ -71,11 +80,14 @@ enum TaskType {
         this.code = code;
     }
 
+<<<<<<< HEAD
     /**
      * Returns the code representing this task type.
      *
      * @return the task type code
      */
+=======
+>>>>>>> branch-A-CodingStandard
     public char code() {
         return code;
     }
@@ -103,12 +115,26 @@ public abstract class Task {
         this.status = Status.NOT_DONE;
     }
 
+<<<<<<< HEAD
     /**
      * Marks the task as done.
      */
     public void markDone() {
         this.status = Status.DONE;
     }
+=======
+    public void markDone() {
+        this.status = Status.DONE;
+    }
+
+    public void markUndone() {
+        this.status = Status.NOT_DONE;
+    }
+
+    public boolean isDone() {
+        return this.status == Status.DONE;
+    }
+>>>>>>> branch-A-CodingStandard
 
     /**
      * Marks the task as not done.
