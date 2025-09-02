@@ -19,48 +19,30 @@ enum Status {
         this.symbol = symbol;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     /**
      * Returns the symbol representing this status.
      *
      * @return the status symbol
      */
-=======
->>>>>>> branch-A-CodingStandard
-=======
->>>>>>> branch-Level-9
     public char symbol() {
         return symbol;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     /**
      * Creates a Status from a boolean value.
      *
      * @param done true if done, false otherwise
      * @return the corresponding Status
      */
-=======
->>>>>>> branch-A-CodingStandard
-=======
->>>>>>> branch-Level-9
     public static Status fromBoolean(boolean done) {
         return done ? DONE : NOT_DONE;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     /**
      * Returns the toggled status.
      *
      * @return the opposite status
      */
-=======
->>>>>>> branch-A-CodingStandard
-=======
->>>>>>> branch-Level-9
     public Status toggled() {
         return this == DONE ? NOT_DONE : DONE;
     }
@@ -89,17 +71,11 @@ enum TaskType {
         this.code = code;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     /**
      * Returns the code representing this task type.
      *
      * @return the task type code
      */
-=======
->>>>>>> branch-A-CodingStandard
-=======
->>>>>>> branch-Level-9
     public char code() {
         return code;
     }
@@ -127,48 +103,12 @@ public abstract class Task {
         this.status = Status.NOT_DONE;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     /**
      * Marks the task as done.
      */
     public void markDone() {
         this.status = Status.DONE;
     }
-=======
-    public void markDone() {
-        this.status = Status.DONE;
-=======
-    public void markDone() {
-        this.status = Status.DONE;
-    }
-
-    public void markUndone() {
-        this.status = Status.NOT_DONE;
-    }
-
-    public boolean isDone() {
-        return this.status == Status.DONE;
-    }
-
-    /**
-     * Returns the description of the task.
-     *
-     * @return the task description
-     */
-    public String getDescription() {
-        return description;
->>>>>>> branch-Level-9
-    }
-
-    public void markUndone() {
-        this.status = Status.NOT_DONE;
-    }
-
-    public boolean isDone() {
-        return this.status == Status.DONE;
-    }
->>>>>>> branch-A-CodingStandard
 
     /**
      * Marks the task as not done.
@@ -187,6 +127,15 @@ public abstract class Task {
     }
 
     /**
+     * Returns the description of the task.
+     *
+     * @return the task description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
      * Returns the base string representation of the task.
      *
      * @return the base string
@@ -196,13 +145,9 @@ public abstract class Task {
     }
 
     /**
-<<<<<<< HEAD
      * Serializes the task for storage.
      *
      * @return the serialized string
-=======
-     * Declare this so subclasses (Todo/Deadline/Event) can @Override it.
->>>>>>> branch-Level-9
      */
     public abstract String serialize();
 
