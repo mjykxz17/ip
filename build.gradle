@@ -12,7 +12,6 @@ dependencies {
     String javaFxVersion = '17.0.7'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.0'
-
     implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'linux'
@@ -25,10 +24,6 @@ dependencies {
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'linux'
-}
-
-java {
-    modularity.inferModulePath = true
 }
 
 test {
@@ -46,16 +41,15 @@ test {
 }
 
 application {
-    mainClass.set("yoyo.Launcher")
-    applicationDefaultJvmArgs = [
-        "--add-opens", "javafx.graphics/javafx.scene=ALL-UNNAMED",
-        "--add-opens", "javafx.graphics/javafx.stage=ALL-UNNAMED",
-        "--add-opens", "javafx.controls/javafx.scene.control=ALL-UNNAMED"
-    ]
+    mainClass.set("yoyo.YoyoApp")
 }
 
 shadowJar {
     archiveBaseName = "Yoyo"
     archiveClassifier = null
     archiveFileName = 'Yoyo.jar'
+}
+
+run{
+    standardInput = System.in
 }
