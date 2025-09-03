@@ -145,17 +145,4 @@ public class YoyoApp {
     public static void main(String[] args) {
         new YoyoApp("data/yoyo.txt").run();
     }
-
-    // Getter methods for adapter access
-    public TaskList getTasks() {
-        return tasks;
-    }
-
-    public Storage getStorage() {
-        return storage;
-    }
-
-    public Ui getUi() {
-        return ui;
-    }
 }

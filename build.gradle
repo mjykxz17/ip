@@ -27,10 +27,6 @@ dependencies {
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'linux'
 }
 
-java {
-    modularity.inferModulePath = true
-}
-
 test {
     useJUnitPlatform()
 
@@ -46,16 +42,15 @@ test {
 }
 
 application {
-    mainClass.set("yoyo.Launcher")
-    applicationDefaultJvmArgs = [
-        "--add-opens", "javafx.graphics/javafx.scene=ALL-UNNAMED",
-        "--add-opens", "javafx.graphics/javafx.stage=ALL-UNNAMED",
-        "--add-opens", "javafx.controls/javafx.scene.control=ALL-UNNAMED"
-    ]
+    mainClass.set("yoyo.YoyoApp")
 }
 
 shadowJar {
     archiveBaseName = "Yoyo"
     archiveClassifier = null
     archiveFileName = 'Yoyo.jar'
+}
+
+run{
+    standardInput = System.in
 }
