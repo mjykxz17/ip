@@ -40,12 +40,8 @@ public class Storage {
     }
 
     /**
-<<<<<<< HEAD
      * Loads tasks from the data file. Skips corrupted lines and collects
      * warnings.
-=======
-     * Loads tasks from disk. Skips corrupted lines and returns warnings.
->>>>>>> branch-A-CodingStandard
      *
      * @return a LoadResult containing the loaded tasks and any warnings
      */
@@ -83,12 +79,9 @@ public class Storage {
 
     /**
      * Saves the current tasks to disk (creates folder if missing).
-<<<<<<< HEAD
-=======
      *
      * @param tasks the list of tasks to save
      * @throws IOException if an I/O error occurs
->>>>>>> branch-A-CodingStandard
      */
     public void save(List<Task> tasks) throws IOException {
         if (!Files.exists(dataDir)) {
@@ -158,27 +151,21 @@ public class Storage {
      */
     public static class LoadResult {
 
-<<<<<<< HEAD
         /**
          * The list of loaded tasks.
          */
-=======
->>>>>>> branch-A-CodingStandard
         public final List<Task> tasks;
         /**
          * The list of warning messages for corrupted lines.
          */
         public final List<String> warnings;
 
-<<<<<<< HEAD
         /**
          * Constructs a LoadResult with the given tasks and warnings.
          *
          * @param tasks the loaded tasks
          * @param warnings the warning messages
          */
-=======
->>>>>>> branch-A-CodingStandard
         public LoadResult(List<Task> tasks, List<String> warnings) {
             this.tasks = tasks;
             this.warnings = warnings;

@@ -79,13 +79,6 @@ public class Ui {
     }
 
     /**
-<<<<<<< HEAD
-     * Displays a message when a task is added.
-     *
-     * @param t the added task
-     * @param size the new total number of tasks
-     */
-=======
      * Displays the list of tasks that match the search keyword.
      *
      * @param tasks the list of matching tasks
@@ -103,7 +96,12 @@ public class Ui {
         boxed(sb.toString().trim().split("\\R"));
     }
 
->>>>>>> branch-Level-9
+    /**
+     * Displays a message when a task is added.
+     *
+     * @param t the added task
+     * @param size the new total number of tasks
+     */
     public void showAdded(Task t, int size) {
         boxed(
                 "Got it. I've added this task:",
