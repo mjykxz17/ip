@@ -1,7 +1,5 @@
-<<<<<<< HEAD
-[T][ ] bark
-=======
+[T][X] bark
 [T][ ] buy book
 [T][ ] read book
 [T][ ] sell boo
->>>>>>> branch-Level-9
+[T][ ] read book
