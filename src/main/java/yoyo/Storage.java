@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Handles loading and saving of tasks to and from a file. Supports parsing
@@ -55,21 +57,26 @@ public class Storage {
 
         try {
             List<String> lines = Files.readAllLines(dataFile, StandardCharsets.UTF_8);
-            int lineNo = 0;
-            for (String raw : lines) {
-                lineNo++;
-                String line = raw.trim();
-                if (line.isEmpty()) {
-                    continue;
-                }
-
-                try {
-                    Task t = parseLine(line);
-                    tasks.add(t);
-                } catch (IllegalArgumentException ex) {
-                    warnings.add("Line " + lineNo + " skipped: " + ex.getMessage());
-                }
-            }
+            
+            // Use streams to process lines with line numbers
+            List<Task> parsedTasks = IntStream.range(0, lines.size())
+                    .mapToObj(i -> new Object() {
+                        final int lineNo = i + 1;
+                        final String line = lines.get(i).trim();
+                    })
+                    .filter(obj -> !obj.line.isEmpty())
+                    .map(obj -> {
+                        try {
+                            return parseLine(obj.line);
+                        } catch (IllegalArgumentException ex) {
+                            warnings.add("Line " + obj.lineNo + " skipped: " + ex.getMessage());
+                            return null;
+                        }
+                    })
+                    .filter(task -> task != null)
+                    .collect(Collectors.toList());
+            
+            tasks.addAll(parsedTasks);
         } catch (IOException e) {
             warnings.add("Failed to read file: " + e.getMessage());
         }
@@ -87,11 +94,9 @@ public class Storage {
         if (!Files.exists(dataDir)) {
             Files.createDirectories(dataDir);
         }
-        List<String> out = new ArrayList<>();
-        for (Task t : tasks) {
-            // Persist exactly as shown in list output (stable & human-readable)
-            out.add(t.toString());
-        }
+        List<String> out = tasks.stream()
+                .map(Task::toString)
+                .collect(java.util.stream.Collectors.toList());
         Files.write(dataFile, out, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 

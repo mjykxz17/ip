@@ -100,12 +100,8 @@ public class TaskList {
      * @return the list of matching tasks
      */
     public List<Task> find(String keyword) {
-        List<Task> matching = new ArrayList<>();
-        for (Task t : tasks) {
-            if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                matching.add(t);
-            }
-        }
-        return matching;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(keyword.toLowerCase()))
+                .collect(java.util.stream.Collectors.toList());
     }
 }
