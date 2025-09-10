@@ -47,6 +47,7 @@ public class Ui {
                 "  event <description> /from <start> /to <end>",
                 "  mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>",
                 "  find <keyword>",
+                "  sort <criteria> [asc|desc]  (criteria: date, description, status, type)",
                 "  bye"
         );
     }

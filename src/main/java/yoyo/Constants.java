@@ -16,6 +16,7 @@ public final class Constants {
     public static final String CMD_UNMARK = "unmark";
     public static final String CMD_DELETE = "delete";
     public static final String CMD_FIND = "find";
+    public static final String CMD_SORT = "sort";
     public static final String CMD_BYE = "bye";
     public static final String CMD_EXIT = "exit";
     public static final String CMD_QUIT = "quit";
@@ -25,6 +26,12 @@ public final class Constants {
     public static final String ARG_FROM = "/from";
     public static final String ARG_TO = "/to";
 
+    // Sort criteria
+    public static final String SORT_BY_DATE = "date";
+    public static final String SORT_BY_DESCRIPTION = "description";
+    public static final String SORT_BY_STATUS = "status";
+    public static final String SORT_BY_TYPE = "type";
+
     // Error messages
     public static final String ERR_TODO_NEEDS_DESC = "A todo needs a description.\nHint: todo <description>";
     public static final String ERR_DEADLINE_USAGE = "Usage: deadline <description> /by <yyyy-MM-dd>";
@@ -33,6 +40,8 @@ public final class Constants {
     public static final String ERR_UNMARK_USAGE = "Usage: unmark <taskNumber>";
     public static final String ERR_DELETE_USAGE = "Usage: delete <taskNumber>";
     public static final String ERR_FIND_NEEDS_KEYWORD = "Please provide a keyword to search.\nHint: find <keyword>";
+    public static final String ERR_SORT_USAGE = "Usage: sort <criteria> [asc|desc]\nCriteria: date, description, status, type\nExample: sort date asc";
+    public static final String ERR_INVALID_SORT_CRITERIA = "Invalid sort criteria. Use: date, description, status, type";
     public static final String ERR_INVALID_COMMAND = "OOPS!!! I'm sorry, but I don't know what that means :-(";
     public static final String ERR_UNKNOWN_COMMAND = "Unknown command: ";
     public static final String ERR_INVALID_TASK_NUMBER = "Invalid task number: ";

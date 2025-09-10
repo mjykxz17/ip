@@ -27,6 +27,7 @@ public class CommandFactory {
             case Constants.CMD_UNMARK -> new UnmarkCommand(args, tasks, ui);
             case Constants.CMD_DELETE -> new DeleteCommand(args, tasks, ui);
             case Constants.CMD_FIND -> new FindCommand(args, tasks, ui);
+            case "sort" -> new SortCommand(args, tasks, ui);
             case Constants.CMD_BYE, Constants.CMD_EXIT, Constants.CMD_QUIT -> new ExitCommand(ui);
             default -> throw new IllegalArgumentException(Constants.ERR_UNKNOWN_COMMAND + commandName);
         };
@@ -220,6 +221,57 @@ public class CommandFactory {
             java.util.List<Task> found = tasks.find(args);
             ui.showFound(found);
             return false;
+        }
+    }
+
+    private static class SortCommand implements Command {
+        private final String args;
+        private final TaskList tasks;
+        private final Ui ui;
+
+        SortCommand(String args, TaskList tasks, Ui ui) {
+            this.args = args;
+            this.tasks = tasks;
+            this.ui = ui;
+        }
+
+        @Override
+        public boolean execute() throws YoyoException {
+            if (args.isEmpty()) {
+                throw new YoyoException("Usage: sort <criteria> [asc|desc]\nCriteria: date, description, status, type\nExample: sort date asc");
+            }
+
+            String[] parts = args.trim().split("\\s+", 2);
+            String criteria = parts[0].toLowerCase();
+            boolean ascending = true; // default to ascending
+
+            // Check if order is specified
+            if (parts.length > 1) {
+                String order = parts[1].toLowerCase();
+                if ("desc".equals(order) || "descending".equals(order)) {
+                    ascending = false;
+                } else if (!"asc".equals(order) && !"ascending".equals(order)) {
+                    throw new YoyoException("Invalid sort order. Use 'asc' or 'desc'");
+                }
+            }
+
+            // Validate criteria
+            if (!isValidSortCriteria(criteria)) {
+                throw new YoyoException("Invalid sort criteria. Use: date, description, status, type");
+            }
+
+            // Perform the sort
+            tasks.sort(criteria, ascending);
+
+            // Show the sorted list
+            ui.showList(tasks.asList());
+
+            return false;
+        }
+
+        private boolean isValidSortCriteria(String criteria) {
+            return "date".equals(criteria) || "description".equals(criteria) ||
+                   "status".equals(criteria) || "type".equals(criteria);
         }
     }
 
