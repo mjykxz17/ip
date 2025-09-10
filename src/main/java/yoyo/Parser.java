@@ -38,6 +38,7 @@ public class Parser {
      * @return the parsed command
      */
     public static Parsed parse(String input) {
+        assert input != null : "Input string cannot be null";
         String[] parts = input.trim().split("\\s+", 2);
         String cmd = parts[0].toLowerCase();
         String args = parts.length > 1 ? parts[1] : "";
@@ -53,6 +54,7 @@ public class Parser {
      * @throws YoyoException if the index is invalid
      */
     public static int parseIndex(String arg, int size) throws YoyoException {
+        assert size >= 0 : "Task list size cannot be negative, got: " + size;
         if (arg == null || arg.isEmpty()) {
             throw new YoyoException("Usage: mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>.");
         }
@@ -65,6 +67,7 @@ public class Parser {
         if (idx < 1 || idx > size) {
             throw new YoyoException("Invalid task number: " + idx);
         }
+        assert idx >= 1 && idx <= size : "Parsed index should be within valid range";
         return idx;
     }
 }

@@ -23,6 +23,7 @@ public class Deadline extends Task {
 
     public Deadline(String description, String byRaw) {
         super(TaskType.DEADLINE, description);
+        assert byRaw != null && !byRaw.trim().isEmpty() : "Deadline 'by' parameter cannot be null or empty";
         this.by = parseFlexibleDateTime(byRaw);
     }
 

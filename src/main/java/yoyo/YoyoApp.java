@@ -17,6 +17,7 @@ public class YoyoApp {
      * @param filePath the path to the data file for storing tasks
      */
     public YoyoApp(String filePath) {
+        assert filePath != null && !filePath.trim().isEmpty() : "File path cannot be null or empty";
         this.ui = new Ui();
         this.storage = new Storage(filePath);
         Storage.LoadResult loaded = storage.load();
@@ -143,6 +144,7 @@ public class YoyoApp {
      * @param args command line arguments (not used)
      */
     public static void main(String[] args) {
+        assert args != null : "Command line arguments array cannot be null";
         new YoyoApp("data/yoyo.txt").run();
     }
 
