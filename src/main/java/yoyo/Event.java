@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Represents an event task with a start and end time.
@@ -89,27 +91,43 @@ public class Event extends Task {
     private static LocalDateTime parseFlexibleDateTime(String raw) {
         String s = raw.trim();
 
-        // Try datetime patterns first
-        for (DateTimeFormatter f : new DateTimeFormatter[]{
+        // Try datetime patterns first using streams
+        Optional<LocalDateTime> dateTimeResult = Arrays.stream(new DateTimeFormatter[]{
             DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT_STORAGE),
             DateTimeFormatter.ofPattern(Constants.DATE_FORMAT_SHORT + " HHmm")
-        }) {
+        })
+        .map(formatter -> {
             try {
-                return LocalDateTime.parse(s, f);
-            } catch (DateTimeParseException ignored) {
+                return LocalDateTime.parse(s, formatter);
+            } catch (DateTimeParseException e) {
+                return null;
             }
+        })
+        .filter(result -> result != null)
+        .findFirst();
+
+        if (dateTimeResult.isPresent()) {
+            return dateTimeResult.get();
         }
 
-        // Then date-only (assume 00:00)
-        for (DateTimeFormatter f : new DateTimeFormatter[]{
+        // Then try date-only (assume 00:00)
+        Optional<LocalDateTime> dateResult = Arrays.stream(new DateTimeFormatter[]{
             DateTimeFormatter.ISO_LOCAL_DATE, // yyyy-MM-dd
             DateTimeFormatter.ofPattern(Constants.DATE_FORMAT_SHORT) // 2/12/2019
-        }) {
+        })
+        .map(formatter -> {
             try {
-                LocalDate d = LocalDate.parse(s, f);
+                LocalDate d = LocalDate.parse(s, formatter);
                 return LocalDateTime.of(d, LocalTime.MIDNIGHT);
-            } catch (DateTimeParseException ignored) {
+            } catch (DateTimeParseException e) {
+                return null;
             }
+        })
+        .filter(result -> result != null)
+        .findFirst();
+
+        if (dateResult.isPresent()) {
+            return dateResult.get();
         }
 
         throw new IllegalArgumentException(

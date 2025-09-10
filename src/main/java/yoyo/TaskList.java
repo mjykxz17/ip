@@ -106,13 +106,9 @@ public class TaskList {
      */
     public List<Task> find(String keyword) {
         assert keyword != null && !keyword.trim().isEmpty() : "Search keyword cannot be null or empty";
-        List<Task> matching = new ArrayList<>();
-        for (Task t : tasks) {
-            if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                matching.add(t);
-            }
-        }
-        return matching;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(keyword.toLowerCase()))
+                .collect(java.util.stream.Collectors.toList());
     }
 
     /**
