@@ -17,14 +17,14 @@ import java.util.regex.Pattern;
  */
 public class Storage {
 
-    public static final String DEFAULT_PATH = "data/yoyo.txt";
+    public static final String DEFAULT_PATH = Constants.DEFAULT_DATA_FILE;
 
     private static final Pattern TODO_P
-            = Pattern.compile("^\\[T]\\[( |X)]\\s(.+)$");
+            = Pattern.compile(Constants.REGEX_TODO);
     private static final Pattern DEADLINE_P
-            = Pattern.compile("^\\[D]\\[( |X)]\\s(.+)\\s\\(by:\\s(.+)\\)$");
+            = Pattern.compile(Constants.REGEX_DEADLINE);
     private static final Pattern EVENT_P
-            = Pattern.compile("^\\[E]\\[( |X)]\\s(.+)\\s\\(from:\\s(.+)\\s+to:\\s(.+)\\)$");
+            = Pattern.compile(Constants.REGEX_EVENT);
 
     private final Path dataFile;
     private final Path dataDir;
@@ -67,11 +67,11 @@ public class Storage {
                     Task t = parseLine(line);
                     tasks.add(t);
                 } catch (IllegalArgumentException ex) {
-                    warnings.add("Line " + lineNo + " skipped: " + ex.getMessage());
+                    warnings.add(String.format(Constants.ERR_LINE_SKIPPED, lineNo, ex.getMessage()));
                 }
             }
         } catch (IOException e) {
-            warnings.add("Failed to read file: " + e.getMessage());
+            warnings.add(Constants.ERR_FAILED_TO_READ_FILE + e.getMessage());
         }
 
         return new LoadResult(tasks, warnings);
@@ -107,41 +107,34 @@ public class Storage {
 
         m = TODO_P.matcher(line);
         if (m.matches()) {
-            boolean done = m.group(1).equals("X");
-            String desc = m.group(2);
-            Task t = new Todo(desc);
-            if (done) {
-                t.markDone();
-            }
-            return t;
+            return createTaskFromMatcher(new Todo(m.group(2)), m.group(1));
         }
 
         m = DEADLINE_P.matcher(line);
         if (m.matches()) {
-            boolean done = m.group(1).equals("X");
-            String desc = m.group(2);
-            String by = m.group(3);
-            Task t = new Deadline(desc, by);
-            if (done) {
-                t.markDone();
-            }
-            return t;
+            return createTaskFromMatcher(new Deadline(m.group(2), m.group(3)), m.group(1));
         }
 
         m = EVENT_P.matcher(line);
         if (m.matches()) {
-            boolean done = m.group(1).equals("X");
-            String desc = m.group(2);
-            String from = m.group(3);
-            String to = m.group(4);
-            Task t = new Event(desc, from, to);
-            if (done) {
-                t.markDone();
-            }
-            return t;
+            return createTaskFromMatcher(new Event(m.group(2), m.group(3), m.group(4)), m.group(1));
         }
 
         throw new IllegalArgumentException("Unrecognized format: " + line);
+    }
+
+    /**
+     * Creates a task and sets its completion status based on the status symbol.
+     *
+     * @param task the task to configure
+     * @param statusSymbol the status symbol ("X" for done, " " for not done)
+     * @return the configured task
+     */
+    private static Task createTaskFromMatcher(Task task, String statusSymbol) {
+        if (String.valueOf(Constants.STATUS_DONE).equals(statusSymbol)) {
+            task.markDone();
+        }
+        return task;
     }
 
     // -------- Helper type for returning both tasks and warnings --------

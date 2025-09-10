@@ -44,7 +44,7 @@ public class TaskList {
      * @return the task at the index
      */
     public Task get(int idx1Based) {
-        return tasks.get(idx1Based - 1);
+        return tasks.get(toZeroBasedIndex(idx1Based));
     }
 
     /**
@@ -63,7 +63,7 @@ public class TaskList {
      * @return the removed task
      */
     public Task remove(int idx1Based) {
-        return tasks.remove(idx1Based - 1);
+        return tasks.remove(toZeroBasedIndex(idx1Based));
     }
 
     /**
@@ -107,5 +107,15 @@ public class TaskList {
             }
         }
         return matching;
+    }
+
+    /**
+     * Converts a 1-based index to a 0-based index.
+     *
+     * @param oneBasedIndex the 1-based index
+     * @return the 0-based index
+     */
+    private int toZeroBasedIndex(int oneBasedIndex) {
+        return oneBasedIndex - 1;
     }
 }

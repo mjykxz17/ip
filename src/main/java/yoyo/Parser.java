@@ -54,16 +54,16 @@ public class Parser {
      */
     public static int parseIndex(String arg, int size) throws YoyoException {
         if (arg == null || arg.isEmpty()) {
-            throw new YoyoException("Usage: mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>.");
+            throw new YoyoException(Constants.ERR_MARK_USAGE + " | " + Constants.ERR_UNMARK_USAGE + " | " + Constants.ERR_DELETE_USAGE);
         }
         int idx;
         try {
             idx = Integer.parseInt(arg.trim());
         } catch (NumberFormatException e) {
-            throw new YoyoException("Task number must be an integer.");
+            throw new YoyoException(Constants.ERR_TASK_NUMBER_MUST_BE_INT);
         }
-        if (idx < 1 || idx > size) {
-            throw new YoyoException("Invalid task number: " + idx);
+        if (idx < Constants.MIN_TASK_INDEX || idx > size) {
+            throw new YoyoException(Constants.ERR_INVALID_TASK_NUMBER + idx);
         }
         return idx;
     }

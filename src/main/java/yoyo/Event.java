@@ -16,11 +16,11 @@ public class Event extends Task {
 
     // Pretty output (e.g., "Dec 2 2019, 14:00")
     private static final DateTimeFormatter OUTPUT_FORMAT
-            = DateTimeFormatter.ofPattern("MMM d yyyy, HH:mm");
+            = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT_OUTPUT);
 
     // Stable storage (e.g., "2019-12-02 1400")
     private static final DateTimeFormatter STORAGE_FORMAT
-            = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT_STORAGE);
 
     public Event(String description, String fromRaw, String toRaw) {
         super(TaskType.EVENT, description);
@@ -89,8 +89,8 @@ public class Event extends Task {
 
         // Try datetime patterns first
         for (DateTimeFormatter f : new DateTimeFormatter[]{
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"),
-            DateTimeFormatter.ofPattern("d/M/yyyy HHmm")
+            DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT_STORAGE),
+            DateTimeFormatter.ofPattern(Constants.DATE_FORMAT_SHORT + " HHmm")
         }) {
             try {
                 return LocalDateTime.parse(s, f);
@@ -101,7 +101,7 @@ public class Event extends Task {
         // Then date-only (assume 00:00)
         for (DateTimeFormatter f : new DateTimeFormatter[]{
             DateTimeFormatter.ISO_LOCAL_DATE, // yyyy-MM-dd
-            DateTimeFormatter.ofPattern("d/M/yyyy") // 2/12/2019
+            DateTimeFormatter.ofPattern(Constants.DATE_FORMAT_SHORT) // 2/12/2019
         }) {
             try {
                 LocalDate d = LocalDate.parse(s, f);
@@ -111,7 +111,6 @@ public class Event extends Task {
         }
 
         throw new IllegalArgumentException(
-                "Unrecognized date/time: \"" + raw
-                + "\". Use yyyy-MM-dd or d/M/yyyy, optionally with time HHmm.");
+                String.format(Constants.ERR_UNRECOGNIZED_DATE, raw));
     }
 }
