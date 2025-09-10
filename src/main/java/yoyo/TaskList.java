@@ -25,6 +25,7 @@ public class TaskList {
      * @param seed the initial list of tasks
      */
     public TaskList(List<Task> seed) {
+        assert seed != null : "Seed list cannot be null";
         this.tasks = new ArrayList<>(seed);
     }
 
@@ -44,7 +45,12 @@ public class TaskList {
      * @return the task at the index
      */
     public Task get(int idx1Based) {
+<<<<<<< HEAD
         return tasks.get(toZeroBasedIndex(idx1Based));
+=======
+        assert idx1Based >= 1 && idx1Based <= tasks.size() : "Index must be between 1 and " + tasks.size() + ", got: " + idx1Based;
+        return tasks.get(idx1Based - 1);
+>>>>>>> master
     }
 
     /**
@@ -63,7 +69,12 @@ public class TaskList {
      * @return the removed task
      */
     public Task remove(int idx1Based) {
+<<<<<<< HEAD
         return tasks.remove(toZeroBasedIndex(idx1Based));
+=======
+        assert idx1Based >= 1 && idx1Based <= tasks.size() : "Index must be between 1 and " + tasks.size() + ", got: " + idx1Based;
+        return tasks.remove(idx1Based - 1);
+>>>>>>> master
     }
 
     /**
@@ -72,6 +83,7 @@ public class TaskList {
      * @param idx1Based the 1-based index of the task
      */
     public void mark(int idx1Based) {
+        assert idx1Based >= 1 && idx1Based <= tasks.size() : "Index must be between 1 and " + tasks.size() + ", got: " + idx1Based;
         get(idx1Based).markDone();
     }
 
@@ -81,6 +93,7 @@ public class TaskList {
      * @param idx1Based the 1-based index of the task
      */
     public void unmark(int idx1Based) {
+        assert idx1Based >= 1 && idx1Based <= tasks.size() : "Index must be between 1 and " + tasks.size() + ", got: " + idx1Based;
         get(idx1Based).markUndone();
     }
 
@@ -100,6 +113,7 @@ public class TaskList {
      * @return the list of matching tasks
      */
     public List<Task> find(String keyword) {
+        assert keyword != null && !keyword.trim().isEmpty() : "Search keyword cannot be null or empty";
         List<Task> matching = new ArrayList<>();
         for (Task t : tasks) {
             if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {

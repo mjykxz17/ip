@@ -35,6 +35,7 @@ public class Storage {
      * @param relativePath the relative path to the data file
      */
     public Storage(String relativePath) {
+        assert relativePath != null && !relativePath.trim().isEmpty() : "Relative path cannot be null or empty";
         this.dataFile = Paths.get(relativePath);
         this.dataDir = dataFile.getParent() == null ? Paths.get(".") : dataFile.getParent();
     }
@@ -84,6 +85,7 @@ public class Storage {
      * @throws IOException if an I/O error occurs
      */
     public void save(List<Task> tasks) throws IOException {
+        assert tasks != null : "Tasks list cannot be null";
         if (!Files.exists(dataDir)) {
             Files.createDirectories(dataDir);
         }
@@ -103,21 +105,61 @@ public class Storage {
      * @throws IllegalArgumentException if the line format is unrecognized
      */
     private static Task parseLine(String line) {
+        assert line != null && !line.trim().isEmpty() : "Line to parse cannot be null or empty";
         Matcher m;
 
         m = TODO_P.matcher(line);
         if (m.matches()) {
+<<<<<<< HEAD
             return createTaskFromMatcher(new Todo(m.group(2)), m.group(1));
+=======
+            boolean done = m.group(1).equals("X");
+            String desc = m.group(2);
+            assert desc != null && !desc.trim().isEmpty() : "Todo description cannot be null or empty";
+            Task t = new Todo(desc);
+            if (done) {
+                t.markDone();
+            }
+            return t;
+>>>>>>> master
         }
 
         m = DEADLINE_P.matcher(line);
         if (m.matches()) {
+<<<<<<< HEAD
             return createTaskFromMatcher(new Deadline(m.group(2), m.group(3)), m.group(1));
+=======
+            boolean done = m.group(1).equals("X");
+            String desc = m.group(2);
+            String by = m.group(3);
+            assert desc != null && !desc.trim().isEmpty() : "Deadline description cannot be null or empty";
+            assert by != null && !by.trim().isEmpty() : "Deadline 'by' date cannot be null or empty";
+            Task t = new Deadline(desc, by);
+            if (done) {
+                t.markDone();
+            }
+            return t;
+>>>>>>> master
         }
 
         m = EVENT_P.matcher(line);
         if (m.matches()) {
+<<<<<<< HEAD
             return createTaskFromMatcher(new Event(m.group(2), m.group(3), m.group(4)), m.group(1));
+=======
+            boolean done = m.group(1).equals("X");
+            String desc = m.group(2);
+            String from = m.group(3);
+            String to = m.group(4);
+            assert desc != null && !desc.trim().isEmpty() : "Event description cannot be null or empty";
+            assert from != null && !from.trim().isEmpty() : "Event 'from' time cannot be null or empty";
+            assert to != null && !to.trim().isEmpty() : "Event 'to' time cannot be null or empty";
+            Task t = new Event(desc, from, to);
+            if (done) {
+                t.markDone();
+            }
+            return t;
+>>>>>>> master
         }
 
         throw new IllegalArgumentException("Unrecognized format: " + line);
