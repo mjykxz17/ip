@@ -26,6 +26,8 @@ public class Event extends Task {
 
     public Event(String description, String fromRaw, String toRaw) {
         super(TaskType.EVENT, description);
+        assert fromRaw != null && !fromRaw.trim().isEmpty() : "Event 'from' parameter cannot be null or empty";
+        assert toRaw != null && !toRaw.trim().isEmpty() : "Event 'to' parameter cannot be null or empty";
         this.from = parseFlexibleDateTime(fromRaw);
         this.to = parseFlexibleDateTime(toRaw);
         if (this.to.isBefore(this.from)) {
