@@ -110,56 +110,17 @@ public class Storage {
 
         m = TODO_P.matcher(line);
         if (m.matches()) {
-<<<<<<< HEAD
             return createTaskFromMatcher(new Todo(m.group(2)), m.group(1));
-=======
-            boolean done = m.group(1).equals("X");
-            String desc = m.group(2);
-            assert desc != null && !desc.trim().isEmpty() : "Todo description cannot be null or empty";
-            Task t = new Todo(desc);
-            if (done) {
-                t.markDone();
-            }
-            return t;
->>>>>>> master
         }
 
         m = DEADLINE_P.matcher(line);
         if (m.matches()) {
-<<<<<<< HEAD
             return createTaskFromMatcher(new Deadline(m.group(2), m.group(3)), m.group(1));
-=======
-            boolean done = m.group(1).equals("X");
-            String desc = m.group(2);
-            String by = m.group(3);
-            assert desc != null && !desc.trim().isEmpty() : "Deadline description cannot be null or empty";
-            assert by != null && !by.trim().isEmpty() : "Deadline 'by' date cannot be null or empty";
-            Task t = new Deadline(desc, by);
-            if (done) {
-                t.markDone();
-            }
-            return t;
->>>>>>> master
         }
 
         m = EVENT_P.matcher(line);
         if (m.matches()) {
-<<<<<<< HEAD
             return createTaskFromMatcher(new Event(m.group(2), m.group(3), m.group(4)), m.group(1));
-=======
-            boolean done = m.group(1).equals("X");
-            String desc = m.group(2);
-            String from = m.group(3);
-            String to = m.group(4);
-            assert desc != null && !desc.trim().isEmpty() : "Event description cannot be null or empty";
-            assert from != null && !from.trim().isEmpty() : "Event 'from' time cannot be null or empty";
-            assert to != null && !to.trim().isEmpty() : "Event 'to' time cannot be null or empty";
-            Task t = new Event(desc, from, to);
-            if (done) {
-                t.markDone();
-            }
-            return t;
->>>>>>> master
         }
 
         throw new IllegalArgumentException("Unrecognized format: " + line);

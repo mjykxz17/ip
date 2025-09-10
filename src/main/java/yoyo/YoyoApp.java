@@ -98,12 +98,8 @@ public class YoyoApp {
      * @param args command line arguments (not used)
      */
     public static void main(String[] args) {
-<<<<<<< HEAD
-        new YoyoApp(Constants.DEFAULT_DATA_FILE).run();
-=======
         assert args != null : "Command line arguments array cannot be null";
-        new YoyoApp("data/yoyo.txt").run();
->>>>>>> master
+        new YoyoApp(Constants.DEFAULT_DATA_FILE).run();
     }
 
     // Getter methods for adapter access

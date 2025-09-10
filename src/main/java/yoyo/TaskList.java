@@ -45,12 +45,8 @@ public class TaskList {
      * @return the task at the index
      */
     public Task get(int idx1Based) {
-<<<<<<< HEAD
-        return tasks.get(toZeroBasedIndex(idx1Based));
-=======
         assert idx1Based >= 1 && idx1Based <= tasks.size() : "Index must be between 1 and " + tasks.size() + ", got: " + idx1Based;
-        return tasks.get(idx1Based - 1);
->>>>>>> master
+        return tasks.get(toZeroBasedIndex(idx1Based));
     }
 
     /**
@@ -69,12 +65,8 @@ public class TaskList {
      * @return the removed task
      */
     public Task remove(int idx1Based) {
-<<<<<<< HEAD
-        return tasks.remove(toZeroBasedIndex(idx1Based));
-=======
         assert idx1Based >= 1 && idx1Based <= tasks.size() : "Index must be between 1 and " + tasks.size() + ", got: " + idx1Based;
-        return tasks.remove(idx1Based - 1);
->>>>>>> master
+        return tasks.remove(toZeroBasedIndex(idx1Based));
     }
 
     /**
