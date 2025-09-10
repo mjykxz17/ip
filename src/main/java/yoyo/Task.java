@@ -138,6 +138,32 @@ public abstract class Task {
     }
 
     /**
+     * Returns the task type.
+     *
+     * @return the task type
+     */
+    public TaskType getType() {
+        return type;
+    }
+
+    /**
+     * Returns a comparable date/time for sorting purposes.
+     * For deadlines, returns the due date.
+     * For events, returns the start date.
+     * For todos, returns null (they don't have dates).
+     *
+     * @return the LocalDateTime for sorting, or null if not applicable
+     */
+    public java.time.LocalDateTime getSortDateTime() {
+        if (this instanceof Deadline) {
+            return ((Deadline) this).getBy();
+        } else if (this instanceof Event) {
+            return ((Event) this).getFrom();
+        }
+        return null; // Todos don't have dates
+    }
+
+    /**
      * Returns the base string representation of the task.
      *
      * @return the base string
