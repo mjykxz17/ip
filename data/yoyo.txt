@@ -1,5 +1,5 @@
 [T][X] bark
 [T][ ] buy book
-[T][ ] read book
 [T][ ] sell boo
 [T][ ] read book
+[T][ ] buy food
