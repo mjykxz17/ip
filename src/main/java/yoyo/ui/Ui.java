@@ -1,6 +1,7 @@
 package yoyo.ui;
 
 import yoyo.task.Task;
+import yoyo.util.Constants;
 
 /**
  * User interface class for the Yoyo application. Handles all input and output
@@ -41,17 +42,7 @@ public class Ui {
      * Displays the help message with available commands.
      */
     public void showHelp() {
-        boxed(
-                "Commands:",
-                "  list",
-                "  todo <description>",
-                "  deadline <description> /by <deadline text>",
-                "  event <description> /from <start> /to <end>",
-                "  mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>",
-                "  find <keyword>",
-                "  sort <criteria> [asc|desc]  (criteria: date, description, status, type)",
-                "  bye"
-        );
+        System.out.println(Constants.HELP_TEXT);
     }
 
     /**

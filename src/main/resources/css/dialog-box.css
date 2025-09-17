@@ -4,18 +4,19 @@
     -fx-text-fill: #ffffff; /* White text */
     -fx-border-color: #555555; /* Dark gray border */
     -fx-border-width: 2px;
-    -fx-background-radius: 15px 15px 15px 0px; /* Rounded corners, flat on right for user */
-    -fx-border-radius: 15px 15px 15px 0px;
+    -fx-background-radius: 15px 0px 0px 15px; /* Rounded corners on right side for user messages */
+    -fx-border-radius: 15px 0px 0px 15px;
     -fx-padding: 10px 15px;
     -fx-font-size: 14px;
     -fx-wrap-text: true;
-    -fx-max-width: 250px;
+    -fx-min-width: 100px; /* Minimum width to prevent too narrow */
+    -fx-pref-width: -1; /* Preferred width to grow with container */
 }
 
 .reply-label {
     -fx-background-color: linear-gradient(to bottom right, #404040, #333333); /* Dark gray gradient for bot messages */
-    -fx-background-radius: 15px 15px 0px 15px; /* Rounded corners, flat on left for bot */
-    -fx-border-radius: 15px 15px 0px 15px;
+    -fx-background-radius: 0px 15px 15px 0px; /* Rounded corners on left side for bot messages */
+    -fx-border-radius: 0px 15px 15px 0px;
 }
 
 /* Command-specific styles */

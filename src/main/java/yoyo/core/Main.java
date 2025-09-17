@@ -28,8 +28,10 @@ public class Main extends Application {
             stage.setScene(scene);
             stage.setTitle("Yoyo");
             stage.setResizable(true);
-            stage.setMinWidth(350);
-            stage.setMinHeight(400);
+            stage.setMinWidth(550);
+            stage.setMinHeight(500);
+            stage.setWidth(650);
+            stage.setHeight(600);
             fxmlLoader.<MainWindow>getController().setYoyoAdapter(yoyo);  // inject the YoyoAdapter instance
             stage.show();
         } catch (IOException e) {

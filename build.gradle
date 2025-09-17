@@ -46,7 +46,7 @@ test {
 }
 
 application {
-    mainClass.set("yoyo.Launcher")
+    mainClass.set("yoyo.core.Launcher")
     applicationDefaultJvmArgs = [
         "--add-opens", "javafx.graphics/javafx.scene=ALL-UNNAMED",
         "--add-opens", "javafx.graphics/javafx.stage=ALL-UNNAMED",

@@ -83,14 +83,37 @@ public final class Constants {
     public static final String ERR_INVALID_COMMAND_WITH_HELP = ERR_INVALID_COMMAND + "\nType 'help' to see commands.";
 
     // Help text
-    public static final String HELP_TEXT = "Commands:\n"
-            + "  list\n"
-            + "  todo <description>\n"
-            + "  deadline <description> /by <deadline text>\n"
-            + "  event <description> /from <start> /to <end>\n"
-            + "  mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>\n"
-            + "  find <keyword>\n"
-            + "  bye";
+    public static final String HELP_TEXT = """
+            YOYO TASK MANAGER - Available Commands
+            =====================================
+
+            TASK MANAGEMENT:
+              • todo <description>           - Add a simple task
+              • deadline <desc> /by <date>   - Add task with deadline
+              • event <desc> /from <start> /to <end> - Add event
+
+            VIEW & SEARCH:
+              • list                        - Show all tasks
+              • find <keyword>              - Search tasks by keyword
+              • sort <criteria> [asc|desc]  - Sort tasks
+
+            TASK MODIFICATION:
+              • mark <number>               - Mark task as done
+              • unmark <number>             - Mark task as not done
+              • delete <number>             - Delete a task
+
+SYSTEM COMMANDS:
+  • help                        - Show this help message
+  • bye                         - Exit the application
+  • quit                        - Exit the application
+  • exit                        - Exit the application            EXAMPLES:
+              todo Buy groceries
+              deadline Submit report /by 2025-09-20
+              event Team meeting /from 2pm /to 4pm
+              mark 1
+              find meeting
+              quit
+            """;
 
     private Constants() {
         // Utility class should not be instantiated
