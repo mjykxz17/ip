@@ -1,4 +1,13 @@
-package yoyo;
+package yoyo.core;
+
+import yoyo.command.Command;
+import yoyo.command.CommandFactory;
+import yoyo.exception.YoyoException;
+import yoyo.parser.Parser;
+import yoyo.storage.Storage;
+import yoyo.task.TaskList;
+import yoyo.ui.Ui;
+import yoyo.util.Constants;
 
 /**
  * Main application class for the Yoyo task management system. Handles user
@@ -85,9 +94,10 @@ public class YoyoApp {
      */
     private boolean shouldSaveAfterCommand(String commandName) {
         return switch (commandName) {
-            case Constants.CMD_TODO, Constants.CMD_DEADLINE, Constants.CMD_EVENT,
-                 Constants.CMD_MARK, Constants.CMD_UNMARK, Constants.CMD_DELETE -> true;
-            default -> false;
+            case Constants.CMD_TODO, Constants.CMD_DEADLINE, Constants.CMD_EVENT, Constants.CMD_MARK, Constants.CMD_UNMARK, Constants.CMD_DELETE ->
+                true;
+            default ->
+                false;
         };
     }
 

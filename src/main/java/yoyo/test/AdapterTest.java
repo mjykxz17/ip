@@ -1,4 +1,6 @@
-package yoyo;
+package yoyo.test;
+
+import yoyo.core.YoyoAdapter;
 
 public class AdapterTest {
 

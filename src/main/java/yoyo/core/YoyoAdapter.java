@@ -1,7 +1,15 @@
-package yoyo;
+package yoyo.core;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import yoyo.exception.YoyoException;
+import yoyo.parser.Parser;
+import yoyo.task.Deadline;
+import yoyo.task.Event;
+import yoyo.task.Task;
+import yoyo.task.Todo;
+import yoyo.util.Constants;
 
 public class YoyoAdapter {
 
@@ -33,7 +41,7 @@ public class YoyoAdapter {
             String response = processCommand(input);
             return response;
         } catch (Exception e) {
-            return "⚠️ " + e.getMessage();
+            return Constants.WARNING_PREFIX + e.getMessage();
         } finally {
             // Restore original System.out
             System.setOut(originalOut);
@@ -124,7 +132,7 @@ public class YoyoAdapter {
         } catch (YoyoException e) {
             return e.getMessage();
         } catch (IllegalArgumentException e) {
-            return "OOPS!!! I'm sorry, but I don't know what that means :-(\nType 'help' to see commands.";
+            return Constants.ERR_INVALID_COMMAND_WITH_HELP;
         } catch (Exception e) {
             return "Unexpected error: " + e.getMessage();
         }
@@ -155,14 +163,7 @@ public class YoyoAdapter {
     }
 
     private String getHelpText() {
-        return "Commands:\n"
-                + "  list\n"
-                + "  todo <description>\n"
-                + "  deadline <description> /by <deadline text>\n"
-                + "  event <description> /from <start> /to <end>\n"
-                + "  mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>\n"
-                + "  find <keyword>\n"
-                + "  bye";
+        return Constants.HELP_TEXT;
     }
 
     public boolean shouldExit(String input) {

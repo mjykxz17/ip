@@ -1,4 +1,4 @@
-package yoyo;
+package yoyo.task;
 
 /**
  * Represents a simple todo task without any deadline or time constraints.

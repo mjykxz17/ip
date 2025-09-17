@@ -1,4 +1,4 @@
-package yoyo;
+package yoyo.task;
 
 /**
  * Represents the completion status of a task.
@@ -147,10 +147,9 @@ public abstract class Task {
     }
 
     /**
-     * Returns a comparable date/time for sorting purposes.
-     * For deadlines, returns the due date.
-     * For events, returns the start date.
-     * For todos, returns null (they don't have dates).
+     * Returns a comparable date/time for sorting purposes. For deadlines,
+     * returns the due date. For events, returns the start date. For todos,
+     * returns null (they don't have dates).
      *
      * @return the LocalDateTime for sorting, or null if not applicable
      */

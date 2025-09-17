@@ -1,4 +1,4 @@
-package yoyo;
+package yoyo.ui;
 
 import java.io.IOException;
 import java.util.Collections;

@@ -1,4 +1,6 @@
-package yoyo;
+package yoyo.ui;
+
+import yoyo.task.Task;
 
 /**
  * User interface class for the Yoyo application. Handles all input and output

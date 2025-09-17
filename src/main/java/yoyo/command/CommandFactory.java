@@ -1,8 +1,17 @@
-package yoyo;
+package yoyo.command;
+
+import yoyo.exception.YoyoException;
+import yoyo.task.Deadline;
+import yoyo.task.Event;
+import yoyo.task.Task;
+import yoyo.task.TaskList;
+import yoyo.task.Todo;
+import yoyo.ui.Ui;
+import yoyo.util.Constants;
 
 /**
- * Factory class for creating command objects based on user input.
- * Implements the Factory pattern to encapsulate command creation logic.
+ * Factory class for creating command objects based on user input. Implements
+ * the Factory pattern to encapsulate command creation logic.
  */
 public class CommandFactory {
 
@@ -18,24 +27,36 @@ public class CommandFactory {
      */
     public static Command createCommand(String commandName, String args, TaskList tasks, Ui ui) {
         return switch (commandName) {
-            case Constants.CMD_LIST -> new ListCommand(tasks, ui);
-            case Constants.CMD_HELP -> new HelpCommand(ui);
-            case Constants.CMD_TODO -> new AddTodoCommand(args, tasks, ui);
-            case Constants.CMD_DEADLINE -> new AddDeadlineCommand(args, tasks, ui);
-            case Constants.CMD_EVENT -> new AddEventCommand(args, tasks, ui);
-            case Constants.CMD_MARK -> new MarkCommand(args, tasks, ui);
-            case Constants.CMD_UNMARK -> new UnmarkCommand(args, tasks, ui);
-            case Constants.CMD_DELETE -> new DeleteCommand(args, tasks, ui);
-            case Constants.CMD_FIND -> new FindCommand(args, tasks, ui);
-            case "sort" -> new SortCommand(args, tasks, ui);
-            case Constants.CMD_BYE, Constants.CMD_EXIT, Constants.CMD_QUIT -> new ExitCommand(ui);
-            default -> throw new IllegalArgumentException(Constants.ERR_UNKNOWN_COMMAND + commandName);
+            case Constants.CMD_LIST ->
+                new ListCommand(tasks, ui);
+            case Constants.CMD_HELP ->
+                new HelpCommand(ui);
+            case Constants.CMD_TODO ->
+                new AddTodoCommand(args, tasks, ui);
+            case Constants.CMD_DEADLINE ->
+                new AddDeadlineCommand(args, tasks, ui);
+            case Constants.CMD_EVENT ->
+                new AddEventCommand(args, tasks, ui);
+            case Constants.CMD_MARK ->
+                new MarkCommand(args, tasks, ui);
+            case Constants.CMD_UNMARK ->
+                new UnmarkCommand(args, tasks, ui);
+            case Constants.CMD_DELETE ->
+                new DeleteCommand(args, tasks, ui);
+            case Constants.CMD_FIND ->
+                new FindCommand(args, tasks, ui);
+            case "sort" ->
+                new SortCommand(args, tasks, ui);
+            case Constants.CMD_BYE, Constants.CMD_EXIT, Constants.CMD_QUIT ->
+                new ExitCommand(ui);
+            default ->
+                throw new IllegalArgumentException(Constants.ERR_UNKNOWN_COMMAND + commandName);
         };
     }
 
     // Command implementations
-
     private static class ListCommand implements Command {
+
         private final TaskList tasks;
         private final Ui ui;
 
@@ -52,6 +73,7 @@ public class CommandFactory {
     }
 
     private static class HelpCommand implements Command {
+
         private final Ui ui;
 
         HelpCommand(Ui ui) {
@@ -66,6 +88,7 @@ public class CommandFactory {
     }
 
     private static class AddTodoCommand implements Command {
+
         private final String args;
         private final TaskList tasks;
         private final Ui ui;
@@ -89,6 +112,7 @@ public class CommandFactory {
     }
 
     private static class AddDeadlineCommand implements Command {
+
         private final String args;
         private final TaskList tasks;
         private final Ui ui;
@@ -115,6 +139,7 @@ public class CommandFactory {
     }
 
     private static class AddEventCommand implements Command {
+
         private final String args;
         private final TaskList tasks;
         private final Ui ui;
@@ -143,6 +168,7 @@ public class CommandFactory {
     }
 
     private static class MarkCommand implements Command {
+
         private final String args;
         private final TaskList tasks;
         private final Ui ui;
@@ -155,7 +181,7 @@ public class CommandFactory {
 
         @Override
         public boolean execute() throws YoyoException {
-            int index = Parser.parseIndex(args, tasks.size());
+            int index = yoyo.parser.Parser.parseIndex(args, tasks.size());
             tasks.mark(index);
             ui.showMark(tasks.get(index));
             return false;
@@ -163,6 +189,7 @@ public class CommandFactory {
     }
 
     private static class UnmarkCommand implements Command {
+
         private final String args;
         private final TaskList tasks;
         private final Ui ui;
@@ -175,7 +202,7 @@ public class CommandFactory {
 
         @Override
         public boolean execute() throws YoyoException {
-            int index = Parser.parseIndex(args, tasks.size());
+            int index = yoyo.parser.Parser.parseIndex(args, tasks.size());
             tasks.unmark(index);
             ui.showUnmark(tasks.get(index));
             return false;
@@ -183,6 +210,7 @@ public class CommandFactory {
     }
 
     private static class DeleteCommand implements Command {
+
         private final String args;
         private final TaskList tasks;
         private final Ui ui;
@@ -195,7 +223,7 @@ public class CommandFactory {
 
         @Override
         public boolean execute() throws YoyoException {
-            int index = Parser.parseIndex(args, tasks.size());
+            int index = yoyo.parser.Parser.parseIndex(args, tasks.size());
             Task removed = tasks.remove(index);
             ui.showRemoved(removed, tasks.size());
             return false;
@@ -203,6 +231,7 @@ public class CommandFactory {
     }
 
     private static class FindCommand implements Command {
+
         private final String args;
         private final TaskList tasks;
         private final Ui ui;
@@ -225,6 +254,7 @@ public class CommandFactory {
     }
 
     private static class SortCommand implements Command {
+
         private final String args;
         private final TaskList tasks;
         private final Ui ui;
@@ -270,12 +300,13 @@ public class CommandFactory {
         }
 
         private boolean isValidSortCriteria(String criteria) {
-            return "date".equals(criteria) || "description".equals(criteria) ||
-                   "status".equals(criteria) || "type".equals(criteria);
+            return "date".equals(criteria) || "description".equals(criteria)
+                    || "status".equals(criteria) || "type".equals(criteria);
         }
     }
 
     private static class ExitCommand implements Command {
+
         private final Ui ui;
 
         ExitCommand(Ui ui) {

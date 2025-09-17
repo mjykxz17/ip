@@ -1,12 +1,18 @@
-package yoyo;
+package yoyo.demo;
 
-import java.time.LocalDateTime;
 import java.util.List;
+
+import yoyo.task.Deadline;
+import yoyo.task.Event;
+import yoyo.task.Task;
+import yoyo.task.TaskList;
+import yoyo.task.Todo;
 
 /**
  * Simple test to demonstrate the sorting functionality.
  */
 public class SortDemo {
+
     public static void main(String[] args) {
         // Create a TaskList with some sample tasks
         TaskList tasks = new TaskList();

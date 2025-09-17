@@ -1,4 +1,7 @@
-package yoyo;
+package yoyo.parser;
+
+import yoyo.exception.YoyoException;
+import yoyo.util.Constants;
 
 /**
  * Utility class for parsing user input commands and task indices.

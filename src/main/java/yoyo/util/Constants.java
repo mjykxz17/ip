@@ -1,8 +1,8 @@
-package yoyo;
+package yoyo.util;
 
 /**
- * Constants used throughout the Yoyo application.
- * Centralizes magic strings and numbers for better maintainability.
+ * Constants used throughout the Yoyo application. Centralizes magic strings and
+ * numbers for better maintainability.
  */
 public final class Constants {
 
@@ -75,6 +75,22 @@ public final class Constants {
 
     // Exit message
     public static final String MSG_GOODBYE = "Bye. Hope to see you again soon!";
+
+    // Warning prefix
+    public static final String WARNING_PREFIX = "⚠️ ";
+
+    // Invalid command with help
+    public static final String ERR_INVALID_COMMAND_WITH_HELP = ERR_INVALID_COMMAND + "\nType 'help' to see commands.";
+
+    // Help text
+    public static final String HELP_TEXT = "Commands:\n"
+            + "  list\n"
+            + "  todo <description>\n"
+            + "  deadline <description> /by <deadline text>\n"
+            + "  event <description> /from <start> /to <end>\n"
+            + "  mark <taskNumber> | unmark <taskNumber> | delete <taskNumber>\n"
+            + "  find <keyword>\n"
+            + "  bye";
 
     private Constants() {
         // Utility class should not be instantiated

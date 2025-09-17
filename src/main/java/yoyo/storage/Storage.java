@@ -1,4 +1,4 @@
-package yoyo;
+package yoyo.storage;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +12,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import yoyo.task.Deadline;
+import yoyo.task.Event;
+import yoyo.task.Task;
+import yoyo.task.Todo;
+import yoyo.util.Constants;
 
 /**
  * Handles loading and saving of tasks to and from a file. Supports parsing
@@ -58,13 +64,13 @@ public class Storage {
 
         try {
             List<String> lines = Files.readAllLines(dataFile, StandardCharsets.UTF_8);
-            
+
             // Use streams to process lines with line numbers
             List<Task> parsedTasks = IntStream.range(0, lines.size())
                     .mapToObj(i -> new Object() {
-                        final int lineNo = i + 1;
-                        final String line = lines.get(i).trim();
-                    })
+                final int lineNo = i + 1;
+                final String line = lines.get(i).trim();
+            })
                     .filter(obj -> !obj.line.isEmpty())
                     .map(obj -> {
                         try {
@@ -76,7 +82,7 @@ public class Storage {
                     })
                     .filter(task -> task != null)
                     .collect(Collectors.toList());
-            
+
             tasks.addAll(parsedTasks);
         } catch (IOException e) {
             warnings.add(Constants.ERR_FAILED_TO_READ_FILE + e.getMessage());

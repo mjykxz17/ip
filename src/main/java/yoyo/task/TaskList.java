@@ -1,4 +1,4 @@
-package yoyo;
+package yoyo.task;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -114,7 +114,8 @@ public class TaskList {
     /**
      * Sorts the tasks in place based on the specified criteria.
      *
-     * @param criteria the sort criteria ("date", "description", "status", "type")
+     * @param criteria the sort criteria ("date", "description", "status",
+     * "type")
      * @param ascending true for ascending order, false for descending
      */
     public void sort(String criteria, boolean ascending) {

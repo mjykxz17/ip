@@ -1,4 +1,4 @@
-package yoyo;
+package yoyo.exception;
 
 /**
  * Custom exception class for the Yoyo application. Used to handle
