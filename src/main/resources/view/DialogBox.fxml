@@ -14,7 +14,7 @@
          xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <Label fx:id="dialog" text="Label" wrapText="true" minHeight="-Infinity" HBox.hgrow="ALWAYS"/>
-    <ImageView fx:id="displayPicture" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" />
+  <ImageView fx:id="displayPicture" id="displayPicture" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" />
   </children>
   <padding>
     <Insets bottom="6.0" left="8.0" right="8.0" top="6.0" />

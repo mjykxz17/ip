@@ -1,6 +1,6 @@
 # Yoyo User Guide
 
-![Yoyo Logo](https://via.placeholder.com/150x50/007acc/ffffff?text=YOYO)
+![Yoyo User Guide](Ui.png)
 
 > **Yoyo** is your friendly task management chatbot that helps you organize your tasks, deadlines, and events with ease!
 
